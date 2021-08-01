@@ -6,27 +6,25 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
 @Component
-public class SHA256Encryptor implements Encryptor {
-    @Override
-    public String encrypt(String message) {
-        try {
-            MessageDigest md = MessageDigest.getInstance("SHA-256");
-
-            byte[] passBytes = message.getBytes();
-            md.reset();
-            byte[] digested = md.digest(passBytes);
-            StringBuilder sb = new StringBuilder();
-
-            for (byte b : digested) {
-                sb.append(Integer.toString((b & 0xff) + 0x100, 16).substring(1));
-
-            }
-            return sb.toString();
-        } catch (NoSuchAlgorithmException e) {
-            throw new RuntimeException("지원하지 않는 암호화 방식입니다.", e);
-        }
+public class SHA256Encryptor {
+    public static String encryptSHA256(String s) {
+        return encrypt(s, "SHA-256");
     }
 
+    private static String encrypt(String s, String messageDigest) {
+        try {
+            MessageDigest md = MessageDigest.getInstance(messageDigest);
+            byte[] passBytes = s.getBytes();
+            md.reset();
+            byte[] digested = md.digest(passBytes);
+            StringBuffer sb = new StringBuffer();
+            for (int i = 0; i < digested.length; i++)
+                sb.append(Integer.toString((digested[i] & 0xff) + 0x100, 16).substring(1));
+            return sb.toString();
+        } catch (Exception e) {
+            return s;
+        }
+    }
 }
 
 
