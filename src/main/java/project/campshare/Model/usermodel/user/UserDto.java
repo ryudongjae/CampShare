@@ -51,5 +51,12 @@ public class UserDto {
                     .phoneNumber(phoneNumber)
                     .build();
         }
+
+    }
+    @Getter
+    @NoArgsConstructor
+    public static class CertificationRequest{
+        private String phoneNumber;
+        private String certificationNumber;
     }
 }
