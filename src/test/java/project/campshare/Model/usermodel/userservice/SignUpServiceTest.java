@@ -18,11 +18,11 @@ import static org.mockito.Mockito.when;
 import static org.mockito.internal.verification.VerificationModeFactory.atLeastOnce;
 
 @ExtendWith(MockitoExtension.class)
-class UserServiceImplTest {
+class SignUpServiceTest {
     @Mock
     UserRepository userRepository;
     @InjectMocks
-    UserServiceImpl userService;
+    SignUpService userService;
 
     private UserDto userDto;
 
@@ -41,21 +41,21 @@ class UserServiceImplTest {
     @Test
     @DisplayName("닉네임 중복으로 인한 회원가입 실패")
     public void nicknameDuplicate() {
-        when(userRepository.existByNickName("17171771")).thenReturn(true);
+        when(userRepository.existsByNickName("17171771")).thenReturn(true);
 
         assertThrows(UserDuplicateException.class, () -> userService.saveUser(userDto));
 
-        verify(userRepository, atLeastOnce()).existByNickName("17171771");
+        verify(userRepository, atLeastOnce()).existsByNickName("17171771");
     }
 
     @Test
     @DisplayName("이메일 중복으로 인한 회원가입 실패")
     public void emailDuplicate() {
-        when(userRepository.existByEmail("test123@test.com")).thenReturn(true);
+        when(userRepository.existsByEmail("test123@test.com")).thenReturn(true);
 
         assertThrows(UserDuplicateException.class, () -> userService.saveUser(userDto));
 
-        verify(userRepository, atLeastOnce()).existByEmail("test123@test.com");
+        verify(userRepository, atLeastOnce()).existsByEmail("test123@test.com");
     }
 
 
