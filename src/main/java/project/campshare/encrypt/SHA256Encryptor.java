@@ -17,9 +17,8 @@ public class SHA256Encryptor {
             byte[] passBytes = s.getBytes();
             md.reset();
             byte[] digested = md.digest(passBytes);
-            StringBuffer sb = new StringBuffer();
-            for (int i = 0; i < digested.length; i++)
-                sb.append(Integer.toString((digested[i] & 0xff) + 0x100, 16).substring(1));
+            StringBuilder sb = new StringBuilder();
+            for (int i = 0; i < digested.length; i++) sb.append(Integer.toString((digested[i]&0xff) + 0x100, 16).substring(1));
             return sb.toString();
         } catch (Exception e) {
             return s;
