@@ -33,15 +33,6 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(errorResponse,errorResponse.getStatus());
     }
 
-    @ExceptionHandler(WrongConfirmPasswordException.class)
-    protected ResponseEntity<ErrorResponse> wrongConfirmPasswordException(WrongConfirmPasswordException exception){
-        ErrorResponse errorResponse = ErrorResponse.builder()
-                .status(HttpStatus.BAD_REQUEST)
-                .message("중복된 비밀번호 입니다.")
-                .build();
-        log.error(errorResponse.getMessage(),exception);
-        return new ResponseEntity<>(errorResponse,errorResponse.getStatus());
-    }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     protected ResponseEntity<ErrorResponse> methodArgumentNotValidException(MethodArgumentNotValidException exception) {
