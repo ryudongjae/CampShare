@@ -5,6 +5,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.validator.constraints.Length;
+import project.campshare.encrypt.EncryptionUtils;
 import project.campshare.encrypt.SHA256Encryptor;
 
 import javax.validation.constraints.Email;
@@ -24,12 +25,6 @@ public class UserDto {
     @Length(min = 8, max = 50)
     private String password;
 
-
-    @NotBlank
-    @Length(min = 8, max = 50)
-    private String confirmPassword;
-
-
     @NotBlank
     @Length(min = 3, max = 20)
     @Pattern(regexp = "^[ㄱ-ㅎ가-힣a-z0-9-_]{3,20}$")
@@ -39,15 +34,24 @@ public class UserDto {
     @Length(min = 10, max = 11)
     private String phone;
 
+    public void passwordEncryption(EncryptionUtils encryptionUtils) {
+        this.password = encryptionUtils.encrypt(password);
+    }
 
     public User toUser() {
         return User.builder()
                 .email(this.email)
-                .password(SHA256Encryptor.encryptSHA256(this.password))
-                .nickName(this.nickname)
+                .password(this.password)
+                .nickname(this.nickname)
                 .phone(this.phone)
-                .createdAt(LocalDateTime.now())
                 .build();
+    }
+
+    @Getter
+    public static class CertificationInfo {
+
+        private String certificationNumber;
+        private String phoneNumber;
     }
 
 }

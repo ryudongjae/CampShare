@@ -9,12 +9,11 @@ import javax.persistence.Id;
 import java.time.LocalDateTime;
 
 @Getter
-@Setter
 @Builder
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
-public class User {
+public class User extends BaseTimeEntity {
     @Id
     @GeneratedValue
     private Long id;
@@ -23,11 +22,9 @@ public class User {
 
     private String password;
 
-    private String nickName;
+    private String nickname;
 
     private String phone;
-
-    private LocalDateTime createdAt;
 
     @Embedded
     private Address address;
@@ -35,9 +32,6 @@ public class User {
     @Embedded
     private Account account;
 
-    @Getter
-    public static class CertificationInfo {
-        private String number;
-    }
+
 
 }
