@@ -7,14 +7,11 @@ import project.campshare.Model.usermodel.user.User;
 import project.campshare.Model.usermodel.user.UserDto;
 import project.campshare.domain.repository.UserRepository;
 import project.campshare.encrypt.EncryptionUtils;
-import project.campshare.exception.DuplicateEmailException;
-import project.campshare.exception.DuplicateNicknameException;
+import project.campshare.exception.user.DuplicateEmailException;
+import project.campshare.exception.user.DuplicateNicknameException;
 
 
 import java.util.List;
-import java.util.Random;
-
-import static project.campshare.util.UserConstants.NUMBER_GENERATIONS_COUNT;
 
 @Service
 @Slf4j
@@ -22,15 +19,15 @@ import static project.campshare.util.UserConstants.NUMBER_GENERATIONS_COUNT;
 public class SignUpService {
 
     private final UserRepository userRepository;
-    private final SmsCertificationService smsCertificationService;
     private final EncryptionUtils encryptionUtils;
-    private final SmsSendService smsSendService;
+
 
     //데이터 조회용. 추후 삭제
     public List<User> findAll() {
         return userRepository.findAll();
     }
 
+    //이메일 중복과 닉네임 중복 exception 분리하여 예외의 원인을 정확히 파악하도록 구현
     public User saveUser(UserDto userDto){
         if(emailDuplicateCheck(userDto.getEmail())){
             throw new DuplicateEmailException("이미 존재하는 이메일 입니다.");
@@ -61,25 +58,4 @@ public class SignUpService {
         return userRepository.existsByNickName(nickname);
     }
 
-    /**
-     * 인증 번호 검증
-     * @param certificationNumber
-     * @return
-     */
-    public boolean certificationNumberInspection(String certificationNumber) {
-        return smsCertificationService.getCertificationService().equals(certificationNumber);
-    }
-
-    /**
-     * 인증번호 생성하는 로직
-     */
-    public void saveAuthenticationNumber(String phoneNumber) {
-        Random rand = new Random();
-        StringBuilder stringBuilder = new StringBuilder();
-        for (int i = 0; i < NUMBER_GENERATIONS_COUNT; i++) {
-            stringBuilder.append((rand.nextInt(10)));
-        }
-        smsCertificationService.setCertificationService(stringBuilder.toString());
-        smsSendService.sendMessage(phoneNumber , smsCertificationService.getCertificationService());
-    }
 }

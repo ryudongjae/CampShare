@@ -1,4 +1,4 @@
-package project.campshare.exception;
+package project.campshare.exception.user;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -6,16 +6,18 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
+import project.campshare.exception.smscertification.FailedToSendMessage;
 
 import java.time.LocalDateTime;
 
-import static project.campshare.util.UserConstants.RESPONSE_EMAIL_CONFLICT;
-import static project.campshare.util.UserConstants.RESPONSE_NICKNAME_CONFLICT;
+import static project.campshare.util.ResponseConstants.*;
+
 
 @Slf4j
 @RestControllerAdvice
 public class CustomizeResponseEntityExceptionHandler extends ResponseEntityExceptionHandler {
-
+    //xception이 발생한 시점과 발생한 url을 log로 출력하여 exception이 발생한 시간과 url, 원인을 알 수 있도록 구현
+    //   (리턴되는 body에는 exception message만 전달하도록 수정)
     @ExceptionHandler(DuplicateEmailException.class)
     public final ResponseEntity<String> handleEmailDuplicateException(DuplicateEmailException ex, WebRequest request){
         log.error("failed to signUp :: {}, detection time ={}",request.getDescription(false),
@@ -29,5 +31,10 @@ public class CustomizeResponseEntityExceptionHandler extends ResponseEntityExcep
         log.error("failed to signUp :: {} , detection time ={} ", request.getDescription(false),
                 LocalDateTime.now(),ex);
         return RESPONSE_NICKNAME_CONFLICT;
+    }
+
+    @ExceptionHandler(FailedToSendMessage.class)
+    public final ResponseEntity handleFailedToSendMessageException(){
+        return RESPONSE_BAD_REQUEST;
     }
 }
