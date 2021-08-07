@@ -7,6 +7,6 @@ import org.springframework.http.ResponseEntity;
 public class UserConstants {
     public static final int NUMBER_GENERATIONS_COUNT = 6;
     public static final String CERTIFICATION_SESSION_KEY = "certificationNumber";
-    public static final String API_KEY = "";
-    public static final String API_SECRET = "";
+    public static final String API_KEY = "NCS6ZIOLCULQXVIT";
+    public static final String API_SECRET = "GDWQZCFZYLXYPIMEEFVPPZIFCUPEQN5T";
 }
