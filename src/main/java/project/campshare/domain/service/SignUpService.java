@@ -6,7 +6,7 @@ import org.springframework.stereotype.Service;
 import project.campshare.Model.usermodel.user.User;
 import project.campshare.Model.usermodel.user.UserDto;
 import project.campshare.domain.repository.UserRepository;
-import project.campshare.encrypt.EncryptionUtils;
+import project.campshare.encrypt.EncryptionService;
 import project.campshare.exception.user.DuplicateEmailException;
 import project.campshare.exception.user.DuplicateNicknameException;
 
@@ -19,7 +19,7 @@ import java.util.List;
 public class SignUpService {
 
     private final UserRepository userRepository;
-    private final EncryptionUtils encryptionUtils;
+    private final EncryptionService encryptionService;
 
 
     //데이터 조회용. 추후 삭제
@@ -36,7 +36,7 @@ public class SignUpService {
         if (nicknameDuplicateCheck(userDto.getNickname())) {
             throw new DuplicateNicknameException("이미 존재하는 닉네임 입니다. 다른 닉네임을 사용해주세요.");
         }
-        userDto.passwordEncryption(encryptionUtils);
+        userDto.passwordEncryption(encryptionService);
         return userRepository.save(userDto.toUser());
     }
 

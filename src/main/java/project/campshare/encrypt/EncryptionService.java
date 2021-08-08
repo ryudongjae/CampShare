@@ -1,5 +1,5 @@
 package project.campshare.encrypt;
 
-public interface EncryptionUtils {
+public interface EncryptionService {
     String encrypt(String s);
 }

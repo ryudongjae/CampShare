@@ -5,7 +5,7 @@ import org.springframework.stereotype.Component;
 import java.security.MessageDigest;
 
 @Component
-public class SHA256Encryptor implements EncryptionUtils {
+public class SHA256Encryptor implements EncryptionService {
 
     @Override
     public String encrypt(String s) {

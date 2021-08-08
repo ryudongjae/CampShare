@@ -12,6 +12,7 @@ import java.util.HashMap;
 import java.util.Random;
 import java.util.concurrent.ConcurrentHashMap;
 
+import static project.campshare.util.CoolSmsConstants.*;
 import static project.campshare.util.UserConstants.*;
 
 @RequiredArgsConstructor
@@ -19,11 +20,32 @@ import static project.campshare.util.UserConstants.*;
 @Slf4j
 public class SmsCertificationService {
 
-    private final ConcurrentHashMap<String,String>certificationInformation =  new ConcurrentHashMap<>();
+    private final SmsCertificationDao smsCertificationDao;
 
+    /**
+     * 인증번호 랜덤으로 생성
+     * @return
+     */
+    private String makeRandomNumber() {
+        Random random = new Random();
+        return String.valueOf(10000+ random.nextInt(90000));
+    }
 
-    public boolean certificationNumberInspection(String certificationNumber, String phoneNumber){
-        return certificationInformation.get(phoneNumber).equals(certificationNumber);
+    // 인증 메세지 내용 생성
+    public String makeSmsContent(String certificationNumber) {
+        SmsMessageTemplate content = new SmsMessageTemplate();
+        content.setcertificationNumber(certificationNumber);
+        return content.parse();
+    }
+
+    public HashMap<String, String> makeParams(String to, String text) {
+        HashMap<String, String> params = new HashMap<>();
+        params.put("from", OFFICIAL_PHONE);
+        params.put("type", SMS_TYPE);
+        params.put("app_version", APP_VERSION);
+        params.put("to", to);
+        params.put("text", text);
+        return params;
     }
 
     /**
@@ -33,7 +55,7 @@ public class SmsCertificationService {
      */
     private void sendMessage(String phoneNumber, String certificationNumber) {
 
-        Message coolsms = new Message(API_KEY, API_SECRET);
+        Message coolsms = new Message(COOLSMS_KEY, COOLSMS_SECRET);
 
         // 4 params(to, from, type, text) are mandatory. must be filled
         HashMap<String, String> params = new HashMap<String, String>();
@@ -47,23 +69,9 @@ public class SmsCertificationService {
             JSONObject obj = (JSONObject) coolsms.send(params);
             System.out.println(obj.toString());
         } catch (CoolsmsException e) {
-            log.error("Message transmission failure : error code{}",e.getCode());
-            throw new FailedToSendMessage();
+           e.printStackTrace();
         }
-
-    }
-
-    /**
-     * 인증번호 랜덤으로 생성
-     * @return
-     */
-    private String createdRandomNumber() {
-        Random rand = new Random();
-        StringBuilder stringBuilder = new StringBuilder();
-        for (int i = 0; i < NUMBER_GENERATIONS_COUNT; i++) {
-            stringBuilder.append((rand.nextInt(10)));
-        }
-        return stringBuilder.toString();
+        smsCertificationDao.createSmsCertification(phoneNumber,randomNumber);
     }
 }
 
