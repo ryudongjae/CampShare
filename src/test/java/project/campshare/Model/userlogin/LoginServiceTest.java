@@ -1,0 +1,92 @@
+package project.campshare.Model.userlogin;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+import project.campshare.Model.usermodel.user.User;
+import project.campshare.Model.usermodel.user.UserDto;
+import project.campshare.Model.usermodel.user.UserDto.LoginRequest;
+import project.campshare.Model.usermodel.user.UserDto.SaveRequest;
+import project.campshare.Model.usermodel.user.UserDto.UserInfoDto;
+import project.campshare.domain.repository.UserRepository;
+import project.campshare.encrypt.EncryptionService;
+import project.campshare.exception.UserNotFoundException;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
+
+@ExtendWith(MockitoExtension.class)
+class LoginServiceTest {
+
+    @Mock
+    UserRepository userRepository;
+
+    @Mock
+    EncryptionService encryptionService;
+
+    @InjectMocks
+    LoginService loginService;
+
+    private User user;
+
+    private SaveRequest saveRequest;
+
+    @BeforeEach
+    void setUp() {
+        saveRequest = SaveRequest.builder()
+                .email("test@test.com")
+                .password("kkyykk")
+                .nickname("17171771")
+                .phone("01077778888")
+                .build();
+
+        user = saveRequest.toEntity();
+    }
+
+    public LoginRequest createLoginDto() {
+        return LoginRequest.of("test@test.com", "test1234");
+
+    }
+
+    @Test
+    @DisplayName("로그인 실패 - 비밀번호가 일치하지 않거나 존재하지 않는 ID를 요청할 경우 UserNotFoundException이 발생한다.")
+    public void FailedToLogin() {
+        LoginRequest loginRequest = createLoginDto();
+
+        when(userRepository.existsByEmailAndPassword(loginRequest.getEmail(),
+                encryptionService.encrypt(loginRequest.getPassword())))
+                .thenReturn(false);
+
+        assertThrows(UserNotFoundException.class,
+                () -> loginService
+                        .existByEmailAndPassword(loginRequest));
+
+        verify(userRepository, atLeastOnce())
+                .existsByEmailAndPassword(loginRequest.getEmail(),
+                        encryptionService.encrypt(loginRequest.getPassword()));
+    }
+
+    @Test
+    @DisplayName("내 정보 - 로그인 한 상태에서 my-infos를 요청하면 정상적으로 내 정보가 리턴된다.")
+    public void getMyInfo_Success() {
+
+        LoginRequest loginRequest = createLoginDto();
+
+        when(userRepository.findByEmail(loginRequest.getEmail())).thenReturn(user);
+
+        UserInfoDto userInfoDto = loginService.getCurrentUser(loginRequest.getEmail());
+
+        assertThat(userInfoDto).isNotNull();
+        assertThat(userInfoDto.getEmail()).isEqualTo(user.getEmail());
+        assertThat(userInfoDto.getNickname()).isEqualTo(user.getNickname());
+
+        verify(userRepository, atLeastOnce())
+                .findByEmail(any());
+    }
+
+}
