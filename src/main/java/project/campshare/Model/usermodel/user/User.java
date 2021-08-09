@@ -6,11 +6,10 @@ import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import java.time.LocalDateTime;
 
 @Getter
-@Builder
 @Entity
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 public class User extends BaseTimeEntity {
@@ -33,5 +32,14 @@ public class User extends BaseTimeEntity {
     private Account account;
 
 
+    public UserDto.UserInfoDto toUserInfoDto() {
+        return UserDto.UserInfoDto.builder()
+                .email(this.getEmail())
+                .nickname(this.getNickname())
+                .phone(this.getPhone())
+                .address(this.getAddress())
+                .account(this.getAccount())
+                .build();
+    }
 
 }

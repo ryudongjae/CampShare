@@ -16,7 +16,7 @@ import java.util.List;
 @Service
 @Slf4j
 @RequiredArgsConstructor
-public class SignUpService {
+public class UserService {
 
     private final UserRepository userRepository;
     private final EncryptionService encryptionService;
@@ -28,7 +28,7 @@ public class SignUpService {
     }
 
     //이메일 중복과 닉네임 중복 exception 분리하여 예외의 원인을 정확히 파악하도록 구현
-    public User saveUser(UserDto userDto){
+    public User saveUser(UserDto.SaveRequest userDto){
         if(emailDuplicateCheck(userDto.getEmail())){
             throw new DuplicateEmailException("이미 존재하는 이메일 입니다.");
         }
@@ -37,7 +37,7 @@ public class SignUpService {
             throw new DuplicateNicknameException("이미 존재하는 닉네임 입니다. 다른 닉네임을 사용해주세요.");
         }
         userDto.passwordEncryption(encryptionService);
-        return userRepository.save(userDto.toUser());
+        return userRepository.save(userDto.toEntity());
     }
 
     /**
