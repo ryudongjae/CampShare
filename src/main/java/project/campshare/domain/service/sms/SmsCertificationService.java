@@ -6,14 +6,14 @@ import net.nurigo.java_sdk.api.Message;
 import net.nurigo.java_sdk.exceptions.CoolsmsException;
 import org.json.simple.JSONObject;
 import org.springframework.stereotype.Service;
-import project.campshare.exception.smscertification.FailedToSendMessage;
+import project.campshare.Model.usermodel.user.UserDto;
+import project.campshare.exception.smscertification.SmsSendFailedException;
+import project.campshare.util.sms.SmsMessageTemplate;
 
 import java.util.HashMap;
 import java.util.Random;
-import java.util.concurrent.ConcurrentHashMap;
 
-import static project.campshare.util.CoolSmsConstants.*;
-import static project.campshare.util.UserConstants.*;
+import static project.campshare.util.sms.CoolSmsConstants.*;
 
 @RequiredArgsConstructor
 @Service
@@ -22,22 +22,17 @@ public class SmsCertificationService {
 
     private final SmsCertificationDao smsCertificationDao;
 
-    /**
-     * 인증번호 랜덤으로 생성
-     * @return
-     */
-    private String makeRandomNumber() {
+    // 6자리 난수 생성
+    public String makeRandomNumber() {
         Random random = new Random();
-        return String.valueOf(10000+ random.nextInt(90000));
+        return String.valueOf(100000 + random.nextInt(900000));
     }
-
     // 인증 메세지 내용 생성
     public String makeSmsContent(String certificationNumber) {
         SmsMessageTemplate content = new SmsMessageTemplate();
         content.setcertificationNumber(certificationNumber);
         return content.parse();
     }
-
     public HashMap<String, String> makeParams(String to, String text) {
         HashMap<String, String> params = new HashMap<>();
         params.put("from", OFFICIAL_PHONE);
@@ -47,31 +42,28 @@ public class SmsCertificationService {
         params.put("text", text);
         return params;
     }
-
-    /**
-     * coolsms API
-     * @param phoneNumber
-     * @param certificationNumber
-     */
-    private void sendMessage(String phoneNumber, String certificationNumber) {
-
+    // sms로 인증번호 발송하고, 발송 정보를 세션에 저장
+    public void sendSms(String phone) {
         Message coolsms = new Message(COOLSMS_KEY, COOLSMS_SECRET);
-
-        // 4 params(to, from, type, text) are mandatory. must be filled
-        HashMap<String, String> params = new HashMap<String, String>();
-        params.put("to", phoneNumber);    // 수신전화번호
-        params.put("from", "01020180103");    // 발신전화번호
-        params.put("type", "SMS");
-        params.put("text", "shoe-action 휴대폰인증  : 인증번호는" + "[" + certificationNumber + "]" + "입니다.");
-        params.put("app_version", "test app 1.2"); // application name and version
-
+        String randomNumber = makeRandomNumber();
+        String content = makeSmsContent(randomNumber);
+        HashMap<String, String> params = makeParams(phone, content);
         try {
-            JSONObject obj = (JSONObject) coolsms.send(params);
-            System.out.println(obj.toString());
-        } catch (CoolsmsException e) {
-           e.printStackTrace();
+            JSONObject result = coolsms.send(params);
+            if (result.get("success_count").toString().equals("0")) throw new SmsSendFailedException();
+        } catch (CoolsmsException exception) {
+            exception.printStackTrace();
         }
-        smsCertificationDao.createSmsCertification(phoneNumber,randomNumber);
+        smsCertificationDao.createSmsCertification(phone, randomNumber);
+    }
+    // 입력한 인증번호가 발송되었던(세션에 저장된) 인증번호가 동일한지 확인
+    public boolean verifySms(UserDto.SmsCertificationRequest requestDto) {
+        if (smsCertificationDao.hasKey(requestDto.getPhone()) &&
+                smsCertificationDao.getSmsCertification(requestDto.getPhone()).equals(requestDto.getCertificationNumber())) {
+            smsCertificationDao.removeSmsCertification(requestDto.getPhone());
+            return true;
+        }
+        return false;
     }
 }
 

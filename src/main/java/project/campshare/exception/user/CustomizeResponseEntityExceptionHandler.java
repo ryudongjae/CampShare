@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
-import project.campshare.exception.smscertification.FailedToSendMessage;
+import project.campshare.exception.smscertification.SmsSendFailedException;
 
 import java.time.LocalDateTime;
 
@@ -33,8 +33,8 @@ public class CustomizeResponseEntityExceptionHandler extends ResponseEntityExcep
         return RESPONSE_NICKNAME_CONFLICT;
     }
 
-    @ExceptionHandler(FailedToSendMessage.class)
+    @ExceptionHandler(SmsSendFailedException.class)
     public final ResponseEntity handleFailedToSendMessageException(){
-        return RESPONSE_BAD_REQUEST;
+        return BAD_REQUEST;
     }
 }
