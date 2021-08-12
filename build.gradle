@@ -32,6 +32,14 @@ dependencies {
 	annotationProcessor 'org.projectlombok:lombok'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 
+	/* Redis 사용을 위한 의존성 추가 */
+	implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+	implementation 'org.springframework.boot:spring-boot-starter-json'
+	implementation group: 'org.msgpack', name: 'jackson-dataformat-msgpack', version: '0.8.18'
+
+	//이메일 발송
+	implementation 'org.springframework.boot:spring-boot-starter-mail'
+
 }
 
 test {
