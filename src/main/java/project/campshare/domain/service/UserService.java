@@ -9,14 +9,19 @@ import project.campshare.domain.repository.UserRepository;
 import project.campshare.encrypt.EncryptionService;
 import project.campshare.exception.user.DuplicateEmailException;
 import project.campshare.exception.user.DuplicateNicknameException;
+import project.campshare.exception.user.UnauthenticatedUserException;
+import project.campshare.exception.user.UserNotFoundException;
 
 
 import java.util.List;
+
+import static project.campshare.Model.usermodel.user.UserDto.*;
 
 @Service
 @Slf4j
 @RequiredArgsConstructor
 public class UserService {
+
 
     private final UserRepository userRepository;
     private final EncryptionService encryptionService;
@@ -28,7 +33,7 @@ public class UserService {
     }
 
     //이메일 중복과 닉네임 중복 exception 분리하여 예외의 원인을 정확히 파악하도록 구현
-    public User saveUser(UserDto.SaveRequest userDto){
+    public User saveUser(SaveRequest userDto){
         if(emailDuplicateCheck(userDto.getEmail())){
             throw new DuplicateEmailException("이미 존재하는 이메일 입니다.");
         }
@@ -58,4 +63,23 @@ public class UserService {
         return userRepository.existsByNickName(nickname);
     }
 
+
+    public FindUserRequest getPhoneNumber(String email) {
+        return userRepository.findByEmail(email)
+                .orElseThrow(() -> new UserNotFoundException("존재하지 않는 email 입니다.")).toFindUserDto();
+    }
+
+    /**
+     * 비밀 번호 변경
+     * @param requestDto
+     */
+    public void updatePassword(ChangePasswordRequest requestDto){
+        String email = requestDto.getEmail();
+        requestDto.passwordEncryption(encryptionService);
+
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new UnauthenticatedUserException("Unauthenticated User"));
+
+        user.updatePassword(requestDto.getPassword());
+    }
 }

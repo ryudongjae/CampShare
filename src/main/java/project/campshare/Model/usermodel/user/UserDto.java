@@ -10,6 +10,7 @@ import project.campshare.encrypt.EncryptionService;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
 
 @Getter
 @Builder
@@ -38,7 +39,7 @@ public class UserDto {
             this.password = encryptionService.encrypt(password);
         }
         @Builder
-        public SaveRequest(String email,String password,String nickname, String phone) {
+        public SaveRequest(String email,String password,String confirmPassword,String nickname, String phone) {
             this.email = email;
             this.password = password;
             this.nickname = nickname;
@@ -59,6 +60,13 @@ public class UserDto {
     @NoArgsConstructor
     public static class SmsCertificationRequest {
         private String phone;
+        private String certificationNumber;
+    }
+
+    @Getter
+    @NoArgsConstructor
+    public static class EmailCertificationRequest{
+        private String email;
         private String certificationNumber;
     }
 
@@ -91,6 +99,26 @@ public class UserDto {
 
         public static UserInfoDto of(String email, String nickname, String phone, Address address, Account account){
             return new UserInfoDto(email,nickname,phone,address,account);
+        }
+    }
+
+    @Getter
+    @Builder
+    public static class FindUserRequest{
+        private String email;
+        private String phone;
+    }
+
+    @Getter
+    public static class ChangePasswordRequest{
+        private String email;
+
+        @NotBlank(message = "비밀번호를 입력하세요.")
+        @Size(min = 8,max = 20,message = "비밀번호는 8자 이상 20자 이하로 입력하세요. ")
+        private String password;
+
+        public void passwordEncryption(EncryptionService encryptionService){
+            this.password = encryptionService.encrypt(password);
         }
     }
 
