@@ -11,6 +11,6 @@ public class EmailContentTemplate {
     }
 
     public String parse(String certificationNumber){
-        return prefix.concat(this.certificationNumber).concat(suffix);
+        return String.format("%s%s%s",prefix,certificationNumber,suffix);
     }
 }
