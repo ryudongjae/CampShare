@@ -22,7 +22,7 @@ public class EmailCertificationDao {
         return stringRedisTemplate.opsForValue().get(PREFIX+email);
     }
 
-    public void removeSmsCertification(String email){
+    public void removeEmailCertification(String email){
         stringRedisTemplate.delete(PREFIX+email);
     }
 

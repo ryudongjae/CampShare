@@ -129,29 +129,28 @@ public class UserApiController {
     //휴대폰 인증 선택시 : sendSms / SmsVerification 핸들러
     //이메일 인증 선택시 : sendEmail / emailVerification 핸들러
 
-
-    @GetMapping("/find/password/{email}")
-    public ResponseEntity<FindUserRequest> forgot_password(@PathVariable String email){
-        FindUserRequest findUserRequest = userService.getPhoneNumber(email);
-        return ResponseEntity.ok(findUserRequest);
+    //이메일로 비밀번호 찾기
+    @GetMapping("/find/{email}")
+    public ResponseEntity<FindUserResponse> forgot_password(@PathVariable String email){
+        FindUserResponse findUserResponse= userService.getUserResource(email);
+        return ResponseEntity.ok(findUserResponse);
     }
 
-
+    //이메일로 인증번호 전송
     @PostMapping("/email-certification/sends")
     public ResponseEntity sendEmail(@RequestBody EmailCertificationRequest request){
         emailCertificationService.sendEmail(request.getEmail());
         return CREATED;
     }
 
+    //이메일 인증
     @PostMapping("/email-certification/confirms")
     public ResponseEntity emailVerification(@RequestBody EmailCertificationRequest request){
-        if(!emailCertificationService.verifyEmail(request)){
-            return BAD_REQUEST;
-        }
+        emailCertificationService.verifyEmail(request);
         return OK;
     }
 
-
+    //비밀번호 변경
     @PatchMapping("password-nonLogin")
     public ResponseEntity changePassword(@RequestBody ChangePasswordRequest request){
         userService.updatePassword(request);

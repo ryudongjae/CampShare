@@ -5,11 +5,12 @@ import org.springframework.stereotype.Service;
 import project.campshare.Model.usermodel.user.UserDto;
 import project.campshare.domain.repository.UserRepository;
 import project.campshare.encrypt.EncryptionService;
-import project.campshare.exception.UserNotFoundException;
+import project.campshare.exception.user.UserNotFoundException;
 
 import javax.servlet.http.HttpSession;
 
 import static project.campshare.util.UserConstants.USER_ID;
+
 
 @Service
 @RequiredArgsConstructor
@@ -18,6 +19,10 @@ public class LoginService {
         private final UserRepository userRepository;
         private final EncryptionService encryptionService;
 
+    /**
+     * 아이디 비밀번호 일치 여부
+     * @param loginRequest
+     */
     public void existByEmailAndPassword(UserDto.LoginRequest loginRequest) {
         loginRequest.passwordEncryption(encryptionService);
         String email = loginRequest.getEmail();
@@ -41,6 +46,6 @@ public class LoginService {
 
 
     public UserDto.UserInfoDto getCurrentUser(String email){
-        return userRepository.findByEmail(email).toUserInfoDto();
+        return userRepository.findByEmail(email).orElseThrow().toUserInfoDto();
     }
 }

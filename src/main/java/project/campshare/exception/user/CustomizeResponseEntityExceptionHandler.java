@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
-import project.campshare.exception.smscertification.SmsSendFailedException;
+import project.campshare.exception.certification.smscertification.SmsSendFailedException;
 
 import java.time.LocalDateTime;
 
@@ -22,7 +22,7 @@ public class CustomizeResponseEntityExceptionHandler extends ResponseEntityExcep
     public final ResponseEntity<String> handleEmailDuplicateException(DuplicateEmailException ex, WebRequest request){
         log.error("failed to signUp :: {}, detection time ={}",request.getDescription(false),
                 LocalDateTime.now(), ex);
-        return RESPONSE_EMAIL_CONFLICT;
+        return DUPLICATION_EMAIL;
 
     }
 
@@ -30,7 +30,7 @@ public class CustomizeResponseEntityExceptionHandler extends ResponseEntityExcep
     public final ResponseEntity<String> handleNickNameDuplicateException(DuplicateNicknameException ex,WebRequest request){
         log.error("failed to signUp :: {} , detection time ={} ", request.getDescription(false),
                 LocalDateTime.now(),ex);
-        return RESPONSE_NICKNAME_CONFLICT;
+        return DUPLICATION_NICKNAME;
     }
 
     @ExceptionHandler(SmsSendFailedException.class)

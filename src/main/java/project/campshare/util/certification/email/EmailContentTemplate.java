@@ -1,4 +1,4 @@
-package project.campshare.util.email;
+package project.campshare.util.certification.email;
 
 public class EmailContentTemplate {
    private final String prefix = "{camp_share} 인증 번호: ";
@@ -10,7 +10,7 @@ public class EmailContentTemplate {
         this.certificationNumber = certificationNumber;
     }
 
-    public String parse(){
-        return prefix.concat(certificationNumber).concat(suffix);
+    public String parse(String certificationNumber){
+        return prefix.concat(this.certificationNumber).concat(suffix);
     }
 }
