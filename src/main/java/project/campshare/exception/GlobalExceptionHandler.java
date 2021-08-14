@@ -47,10 +47,8 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(UserNotFoundException.class)
-    public final ResponseEntity<String> handleUserNotFoundException(
-            UserNotFoundException ex, WebRequest request) {
-        log.error("Failed to signUp ::  {}, detection time={} ", request.getDescription(false),
-                LocalDateTime.now(), ex);
+    public final ResponseEntity<String> handleUserNotFoundException(UserNotFoundException ex, WebRequest request) {
+        log.error("로그인 실패 :  존재하지 않는 ID 또는 패스워드 불일치 ",ex);
         return USER_NOT_FOUND;
     }
 
@@ -59,12 +57,12 @@ public class GlobalExceptionHandler {
             UnauthenticatedUserException ex, WebRequest request) {
         log.error("Failed to Execution ::  {}, detection time={} ", request.getDescription(false),
                 LocalDateTime.now(), ex);
-        return LOGIN_UNAUTHORIZED;
+        return UNAUTHORIZED_USER;
     }
 
     @ExceptionHandler(AuthenticationNumberMismatchException.class)
-    public final ResponseEntity<Void>handleAuthenticationNumberMismatchException(AuthenticationNumberMismatchException ex,WebRequest request){
-        log.error("인증번호가 일치하지 않습니다. : {} ,detection time={}",request.getDescription(false),LocalDateTime.now(),ex);
+    public final ResponseEntity<Void>handleAuthenticationNumberMismatchException(AuthenticationNumberMismatchException ex){
+        log.info("인증번호 불일치",ex);
         return BAD_REQUEST;
     }
 

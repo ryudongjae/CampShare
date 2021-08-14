@@ -3,6 +3,7 @@ package project.campshare.domain.service.email;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
@@ -20,11 +21,12 @@ import static project.campshare.util.certification.email.EmailConstants.TITLE;
 @Slf4j
 @RequiredArgsConstructor
 @Service
+@ConfigurationProperties("external")
 public class EmailCertificationService {
-    @Value("${external.email}")
-    private String FROM_ADDRESS;
+
     private final JavaMailSender mailSender;
     private final EmailCertificationDao emailCertificationDao;
+    private String emailFromAddress;
 
 
     //인증번호 전송 및 저장
@@ -34,7 +36,7 @@ public class EmailCertificationService {
 
         SimpleMailMessage message = new SimpleMailMessage();
         message.setTo(email);
-        message.setFrom(FROM_ADDRESS);
+        message.setFrom(emailFromAddress);
         message.setSubject(TITLE);
         message.setText(content);
         mailSender.send(message);

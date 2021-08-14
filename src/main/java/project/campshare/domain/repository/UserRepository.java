@@ -5,10 +5,10 @@ import org.springframework.stereotype.Repository;
 import project.campshare.Model.usermodel.user.User;
 
 import java.util.Optional;
-
+@Repository
 public interface UserRepository extends JpaRepository<User,Long> {
     boolean existsByEmail(String email);
-    boolean existsByNickName(String nickname);
+    boolean existsByNickname(String nickname);
     boolean existsByEmailAndPassword(String email, String password);
     Optional<User>findByEmail(String email);
 

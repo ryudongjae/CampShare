@@ -23,7 +23,7 @@ public class ResponseConstants {
                     "ID 또는 PW를 확인하세요.", HttpStatus.BAD_REQUEST
             );
 
-    public static final ResponseEntity<String> LOGIN_UNAUTHORIZED =
+    public static final ResponseEntity<String> UNAUTHORIZED_USER =
             new ResponseEntity<>(
                     "Unauthenticated user", HttpStatus.UNAUTHORIZED
             );

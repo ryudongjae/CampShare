@@ -85,9 +85,7 @@ public class UserApiController {
      */
     @PostMapping("/sms-certification/confirms")
     public ResponseEntity<Void> SmsVerification(@RequestBody SmsCertificationRequest requestDto) {
-        if (!smsCertificationService.verifySms(requestDto)) {
-            return BAD_REQUEST;
-        }
+       smsCertificationService.verifySms(requestDto);
         return OK;
     }
 
@@ -152,7 +150,7 @@ public class UserApiController {
 
     //비밀번호 변경
     @PatchMapping("password-nonLogin")
-    public ResponseEntity changePassword(@RequestBody ChangePasswordRequest request){
+    public ResponseEntity changePassword(@Valid @RequestBody ChangePasswordRequest request){
         userService.updatePassword(request);
         return OK;
     }

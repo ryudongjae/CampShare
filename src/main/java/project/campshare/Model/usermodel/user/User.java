@@ -1,11 +1,14 @@
 package project.campshare.Model.usermodel.user;
 
 import lombok.*;
-
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+
+import java.time.LocalDateTime;
+
+import static project.campshare.Model.usermodel.user.UserDto.*;
 
 @Getter
 @Entity
@@ -31,9 +34,11 @@ public class User extends BaseTimeEntity {
     @Embedded
     private Account account;
 
+    private LocalDateTime emailSandDate;
 
-    public UserDto.UserInfoDto toUserInfoDto() {
-        return UserDto.UserInfoDto.builder()
+
+    public UserInfoDto toUserInfoDto() {
+        return UserInfoDto.builder()
                 .email(this.getEmail())
                 .nickname(this.getNickname())
                 .phone(this.getPhone())
@@ -42,4 +47,15 @@ public class User extends BaseTimeEntity {
                 .build();
     }
 
+    public FindUserResponse toFindUserDto(){
+        return FindUserResponse.builder()
+                .email(this.getEmail())
+                .phone(this.getPhone())
+                .build();
+    }
+
+
+    public void updatePassword(String password){
+        this.password = password;
+    }
 }

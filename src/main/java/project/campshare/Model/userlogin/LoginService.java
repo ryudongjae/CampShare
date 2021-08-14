@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import project.campshare.Model.usermodel.user.UserDto;
 import project.campshare.domain.repository.UserRepository;
 import project.campshare.encrypt.EncryptionService;
+import project.campshare.exception.user.UnauthenticatedUserException;
 import project.campshare.exception.user.UserNotFoundException;
 
 import javax.servlet.http.HttpSession;
@@ -46,6 +47,6 @@ public class LoginService {
 
 
     public UserDto.UserInfoDto getCurrentUser(String email){
-        return userRepository.findByEmail(email).orElseThrow().toUserInfoDto();
+        return userRepository.findByEmail(email).orElseThrow(() -> new UnauthenticatedUserException("error : 인증되지 않은 사용자")).toUserInfoDto();
     }
 }
