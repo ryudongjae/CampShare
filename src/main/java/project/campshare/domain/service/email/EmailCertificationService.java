@@ -21,7 +21,7 @@ import static project.campshare.util.certification.email.EmailConstants.TITLE;
 @Slf4j
 @RequiredArgsConstructor
 @Service
-@ConfigurationProperties("external")
+@ConfigurationProperties("certification-related-constants")
 public class EmailCertificationService {
 
     private final JavaMailSender mailSender;
@@ -50,7 +50,7 @@ public class EmailCertificationService {
     //인증 이메일 내용 생성
     public String makeEmailContent(String certificationNumber) {
         EmailContentTemplate content = new EmailContentTemplate();
-        return content.parse(certificationNumber);
+        return content.getCertificationContent(certificationNumber);
     }
 
     //인증번호 확인

@@ -74,15 +74,32 @@ public class UserService {
      * 비밀 번호 변경
      * @param requestDto
      */
-    public void updatePassword(ChangePasswordRequest requestDto){
+    @Transactional
+    public void updatePasswordByForget(ChangePasswordRequest requestDto){
         String email = requestDto.getEmail();
         requestDto.passwordEncryption(encryptionService);
 
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new UnauthenticatedUserException("Unauthenticated User"));
 
-        user.updatePassword(requestDto.getPassword());
+        user.updatePassword(requestDto.getPasswordAfter());
     }
+    @Transactional
+    public void updatePassword(String email , ChangePasswordRequest request){
+        request.passwordEncryption(encryptionService);
+        String passwordBefore = request.getPasswordBefore();
+        String passwordAfter = request.getPasswordAfter();
+        System.out.println(email);
+        if(!userRepository.existsByEmailAndPassword(email,passwordBefore)){
+            throw new UnauthenticatedUserException("이전 비밀번호가 일치하지 않습니다.");
+        }
+
+        User user = userRepository.findByEmail(email).orElseThrow(() -> new UnauthenticatedUserException("Unauthenticated user"));
+
+        user.updatePassword(passwordAfter);
+    }
+
+
     @Transactional
     public void delete(String email, String password) {
         if(!userRepository.existsByEmailAndPassword(email,encryptionService.encrypt(password))){

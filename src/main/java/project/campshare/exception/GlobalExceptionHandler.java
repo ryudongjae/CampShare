@@ -38,7 +38,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(UserNotFoundException.class)
     public final ResponseEntity<String> handleUserNotFoundException(UserNotFoundException ex, WebRequest request) {
-        log.debug("Failed signUp :: {}, detection time = {}",request.getDescription(false));
+        log.debug("로그인 실패 : 존재하지 않는 ID 또는 패스워드 불일치",request.getDescription(false));
         return USER_NOT_FOUND;
     }
 
@@ -52,7 +52,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(AuthenticationNumberMismatchException.class)
     public final ResponseEntity<Void>handleAuthenticationNumberMismatchException(AuthenticationNumberMismatchException ex){
-        log.info("인증번호 불일치",ex);
+        log.debug("인증번호 불일치",ex);
         return BAD_REQUEST;
     }
 

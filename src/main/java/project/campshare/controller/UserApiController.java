@@ -113,10 +113,16 @@ public class UserApiController {
         return OK;
     }
 
-    //비밀번호 변경
-    @PatchMapping("password-nonLogin")
+    //비밀번호 변경(로그인 안한 상태)
+    @PatchMapping("/password-nonLogin")
     public ResponseEntity changePassword(@Valid @RequestBody ChangePasswordRequest request){
-        userService.updatePassword(request);
+        userService.updatePasswordByForget(request);
+        return OK;
+    }
+    //정보수정에서 비밀번호 변경
+    @PatchMapping("/password")
+    public ResponseEntity changePassword(@CurrentUser String email,@Valid@RequestBody ChangePasswordRequest request){
+        userService.updatePassword(email,request);
         return OK;
     }
 

@@ -25,7 +25,7 @@ import static project.campshare.util.certification.sms.CoolSmsConstants.*;
 @Service
 @Slf4j
 @Setter
-@ConfigurationProperties("external")
+@ConfigurationProperties("certification-related-constants")
 public class SmsCertificationService {
 
     private final SmsCertificationDao smsCertificationDao;
@@ -37,7 +37,7 @@ public class SmsCertificationService {
     // 인증 메세지 내용 생성
     public String makeSmsContent(String certificationNumber) {
         SmsMessageTemplate content = new SmsMessageTemplate();
-        return content.parse(certificationNumber);
+        return content.getCertificationNumber(certificationNumber);
     }
 
     public HashMap<String, String> makeParams(String to, String text) {

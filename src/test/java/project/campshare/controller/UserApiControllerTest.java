@@ -9,6 +9,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+import project.campshare.Model.usermodel.user.User;
 import project.campshare.Model.usermodel.user.UserDto;
 import project.campshare.domain.repository.UserRepository;
 
@@ -34,7 +35,7 @@ class UserApiControllerTest {
     @Test
     @DisplayName("회원가입 성공")
     public void signUpSuccess() throws Exception {
-        UserDto userDto = userDto = UserDto.builder()
+        User userDto = User.builder()
                 .email("test123@test.com")
                 .password("test1234")
                 .phone("01011112222")
@@ -53,7 +54,7 @@ class UserApiControllerTest {
     @Test
     void 회원가입_실패()throws Exception{
         //given
-        UserDto userDto =UserDto.builder()
+        User userDto = User.builder()
                 .email("test123@naver.com")
                 .nickname("1111")
                 .password("test12")

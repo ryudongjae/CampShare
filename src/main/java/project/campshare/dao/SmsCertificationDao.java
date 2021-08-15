@@ -1,4 +1,4 @@
-package project.campshare.domain.service.sms;
+package project.campshare.dao;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.StringRedisTemplate;

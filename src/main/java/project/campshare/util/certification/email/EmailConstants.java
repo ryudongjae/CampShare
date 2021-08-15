@@ -1,4 +1,4 @@
-package project.campshare.util.email;
+package project.campshare.util.certification.email;
 
 public class EmailConstants {
 

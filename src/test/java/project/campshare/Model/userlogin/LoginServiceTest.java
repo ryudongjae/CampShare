@@ -8,13 +8,12 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import project.campshare.Model.usermodel.user.User;
-import project.campshare.Model.usermodel.user.UserDto;
 import project.campshare.Model.usermodel.user.UserDto.LoginRequest;
 import project.campshare.Model.usermodel.user.UserDto.SaveRequest;
 import project.campshare.Model.usermodel.user.UserDto.UserInfoDto;
 import project.campshare.domain.repository.UserRepository;
 import project.campshare.encrypt.EncryptionService;
-import project.campshare.exception.UserNotFoundException;
+import project.campshare.exception.user.UserNotFoundException;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
@@ -52,10 +51,23 @@ class LoginServiceTest {
         return LoginRequest.of("test@test.com", "test1234");
 
     }
+    @Test
+    @DisplayName("로그인 성공 : 아이디와 비밀번호 일치")
+    void LoginSucceed()throws Exception{
+       LoginRequest loginRequest = createLoginDto();
+       when(userRepository.existsByEmailAndPassword(loginRequest.getEmail(),
+               encryptionService.encrypt(loginRequest.getPassword())))
+               .thenReturn(true);
+
+       loginService.existByEmailAndPassword(loginRequest);
+
+       verify(userRepository,atLeastOnce()).existsByEmailAndPassword(loginRequest.getEmail(),encryptionService.encrypt(loginRequest.getPassword()));
+
+    }
 
     @Test
     @DisplayName("로그인 실패 - 비밀번호가 일치하지 않거나 존재하지 않는 ID를 요청할 경우 UserNotFoundException이 발생한다.")
-    public void FailedToLogin() {
+    public void LoginFail() {
         LoginRequest loginRequest = createLoginDto();
 
         when(userRepository.existsByEmailAndPassword(loginRequest.getEmail(),
@@ -77,7 +89,7 @@ class LoginServiceTest {
 
         LoginRequest loginRequest = createLoginDto();
 
-        when(userRepository.findByEmail(loginRequest.getEmail())).thenReturn(user);
+        when(userRepository.findByEmail(loginRequest.getEmail())).thenReturn(java.util.Optional.ofNullable(user));
 
         UserInfoDto userInfoDto = loginService.getCurrentUser(loginRequest.getEmail());
 

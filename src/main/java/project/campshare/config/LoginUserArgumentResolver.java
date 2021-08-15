@@ -15,6 +15,7 @@ import project.campshare.annotation.CurrentUser;
 public class LoginUserArgumentResolver implements HandlerMethodArgumentResolver {
 
     private final LoginService loginService;
+
     @Override
     public boolean supportsParameter(MethodParameter parameter) {
         return parameter.hasParameterAnnotation(CurrentUser.class);
