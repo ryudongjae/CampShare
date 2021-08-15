@@ -89,44 +89,9 @@ public class UserApiController {
         return OK;
     }
 
-    /**
-     * 로그인
-     * @param loginRequest
-     * @return
-     */
-    @PostMapping("/login")
-    public ResponseEntity login(@RequestBody LoginRequest loginRequest) {
-        loginService.existByEmailAndPassword(loginRequest);
-        loginService.login(loginRequest.getEmail());
-        return OK;
-    }
-
-    /**
-     * 로그 아웃
-     * @return
-     */
-    @LoginCheck
-    @DeleteMapping("/logout")
-    public ResponseEntity logout() {
-        loginService.logout();
-        return OK;
-    }
-
-    /**
-     * 내 정보
-     * @param email
-     * @return
-     */
-    @LoginCheck
-    @GetMapping("/my-infos")
-    public ResponseEntity<UserInfoDto> myPage(@CurrentUser String email) {
-        UserInfoDto loginUser = loginService.getCurrentUser(email);
-        return ResponseEntity.ok(loginUser);
-    }
     //비밀번호 찾기 : 이메일 입력시, 존재하는 이메일이면 휴대폰인증과 이메일인증 중 택1 하도록 구현
     //휴대폰 인증 선택시 : sendSms / SmsVerification 핸들러
     //이메일 인증 선택시 : sendEmail / emailVerification 핸들러
-
     //이메일로 비밀번호 찾기
     @GetMapping("/find/{email}")
     public ResponseEntity<FindUserResponse> forgot_password(@PathVariable String email){
@@ -154,4 +119,48 @@ public class UserApiController {
         userService.updatePassword(request);
         return OK;
     }
+
+    /**
+     * 로그인
+     * @param loginRequest
+     * @return
+     */
+    @PostMapping("/login")
+    public ResponseEntity login(@RequestBody LoginRequest loginRequest) {
+        loginService.existByEmailAndPassword(loginRequest);
+        loginService.login(loginRequest.getEmail());
+        return OK;
+    }
+
+    /**
+     * 로그 아웃
+     * @return
+     */
+    @LoginCheck
+    @DeleteMapping("/logout")
+    public ResponseEntity logout() {
+        loginService.logout();
+        return OK;
+    }
+    /**
+     * 내 정보
+     * @param email
+     * @return
+     */
+    @LoginCheck
+    @GetMapping("/my-infos")
+    public ResponseEntity<UserInfoDto> myPage(@CurrentUser String email) {
+        UserInfoDto loginUser = loginService.getCurrentUser(email);
+        return ResponseEntity.ok(loginUser);
+    }
+
+    @DeleteMapping
+    @LoginCheck
+    public ResponseEntity<Void>UserRemove(@RequestBody PasswordRequest requestDto,@CurrentUser String email){
+        String password = requestDto.getPassword();
+        userService.delete(email,password);
+        loginService.logout();
+        return OK;
+    }
+
 }

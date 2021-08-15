@@ -3,10 +3,11 @@ package project.campshare.domain.service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import project.campshare.Model.usermodel.user.User;
-import project.campshare.Model.usermodel.user.UserDto;
 import project.campshare.domain.repository.UserRepository;
 import project.campshare.encrypt.EncryptionService;
+import project.campshare.exception.user.WrongPasswordException;
 import project.campshare.exception.user.DuplicateEmailException;
 import project.campshare.exception.user.DuplicateNicknameException;
 import project.campshare.exception.user.UnauthenticatedUserException;
@@ -60,11 +61,11 @@ public class UserService {
      * @return
      */
     public boolean nicknameDuplicateCheck(String nickname) {
-        return userRepository.existsByNickName(nickname);
+        return userRepository.existsByNickname(nickname);
     }
 
 
-    public FindUserRequest getPhoneNumber(String email) {
+    public FindUserResponse getUserResource(String email) {
         return userRepository.findByEmail(email)
                 .orElseThrow(() -> new UserNotFoundException("존재하지 않는 email 입니다.")).toFindUserDto();
     }
@@ -81,5 +82,13 @@ public class UserService {
                 .orElseThrow(() -> new UnauthenticatedUserException("Unauthenticated User"));
 
         user.updatePassword(requestDto.getPassword());
+    }
+    @Transactional
+    public void delete(String email, String password) {
+        if(!userRepository.existsByEmailAndPassword(email,encryptionService.encrypt(password))){
+            throw new WrongPasswordException();
+        }
+
+        userRepository.deleteByEmail(email);
     }
 }

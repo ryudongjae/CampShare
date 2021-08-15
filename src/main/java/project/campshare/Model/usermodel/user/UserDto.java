@@ -1,5 +1,6 @@
 package project.campshare.Model.usermodel.user;
 
+import io.lettuce.core.ExperimentalLettuceCoroutinesApi;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -110,6 +111,7 @@ public class UserDto {
     }
 
     @Getter
+    @AllArgsConstructor
     public static class ChangePasswordRequest{
         private String email;
 
@@ -120,6 +122,16 @@ public class UserDto {
         public void passwordEncryption(EncryptionService encryptionService){
             this.password = encryptionService.encrypt(password);
         }
+
+        public static ChangePasswordRequest of(String email,String password){
+            return new ChangePasswordRequest(email,password);
+        }
+    }
+
+    @Getter
+    @NoArgsConstructor
+    public static class PasswordRequest{
+        private String password;
     }
 
 

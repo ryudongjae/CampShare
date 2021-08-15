@@ -19,6 +19,7 @@ import project.campshare.encrypt.EncryptionService;
 import project.campshare.exception.user.DuplicateEmailException;
 import project.campshare.exception.user.DuplicateNicknameException;
 import project.campshare.exception.user.UserNotFoundException;
+import project.campshare.exception.user.WrongPasswordException;
 
 
 import java.util.Optional;
@@ -145,6 +146,43 @@ class UserServiceTest {
         //then
         Assertions.assertThrows(UserNotFoundException.class,()-> userService.getUserResource("rdj10149@gmail.com"));
         verify(userRepository, atLeastOnce()).findByEmail(email);
+
+
+    }
+
+
+    @Test
+    @DisplayName("비밀번호가 일치하지 않아 회원 탈퇴 실패")
+    void deleteFailure()throws Exception{
+        //given
+        SaveRequest saveRequest = createUser();
+        String email = saveRequest.getEmail();
+        String password = saveRequest.getPassword();
+
+        //when
+        when(userRepository.existsByEmailAndPassword(email,encryptionService.encrypt(password))).thenReturn(false);
+        //then
+
+        Assertions.assertThrows(WrongPasswordException.class, ()->userService.delete(email,password));
+        verify(userRepository,never()).deleteByEmail(email);
+
+
+    }
+
+    @Test
+    @DisplayName("비밀번호가 일치해 회원 탈퇴 성공")
+    void deleteSuccess()throws Exception{
+        //given
+        SaveRequest saveRequest = createUser();
+        String email = saveRequest.getEmail();
+        String password = saveRequest.getPassword();
+
+        //when
+        when(userRepository.existsByEmailAndPassword(email,encryptionService.encrypt(password))).thenReturn(true);
+        userService.delete(email,password);
+
+        //then
+        verify(userRepository,atLeastOnce()).deleteByEmail(email);
 
 
     }
