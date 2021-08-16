@@ -1,7 +1,9 @@
 package project.campshare.Model.usermodel.user;
 
-import jdk.dynalink.linker.LinkerServices;
 import lombok.*;
+import project.campshare.Model.usermodel.user.address.Address;
+import project.campshare.Model.usermodel.user.address.AddressBook;
+import project.campshare.exception.user.UnableToChangeNicknameException;
 
 import javax.persistence.*;
 
@@ -31,11 +33,11 @@ public class User extends BaseTimeEntity {
     @Column(name = "USER_NICKNAME")
     private String nickname;
 
+    private LocalDateTime nicknameModifiedDate;
+
     @Column(name = "USER_PHONENUMBER")
     private String phone;
 
-    @Embedded
-    private Address address;
 
     @OneToMany(cascade = CascadeType.ALL,orphanRemoval = true)
     @JoinColumn(name = "USER_ID")
@@ -50,7 +52,6 @@ public class User extends BaseTimeEntity {
                 .email(this.getEmail())
                 .nickname(this.getNickname())
                 .phone(this.getPhone())
-                .address(this.getAddress())
                 .account(this.getAccount())
                 .build();
     }
@@ -67,8 +68,24 @@ public class User extends BaseTimeEntity {
         this.password = password;
     }
 
-    public void updateAccount(String bankName,String accountNumber,String depositor){
-        Account account = new Account(bankName,accountNumber,depositor);
+    public void updateAccount(Account account){
         this.account = account;
     }
+
+    public void addAddressBook(Address address){
+        this.addressBook.add(new AddressBook(address));
+    }
+
+
+    public void updateNickname(SaveRequest request){
+        if(canModifiedNickname()){
+            throw new UnableToChangeNicknameException("닉네임은 7일에 한번만 변경할 수 있습니다.");
+        }
+    }
+
+    private boolean canModifiedNickname() {
+        return !(this.nicknameModifiedDate.isBefore(LocalDateTime.now().minusDays(7)));
+    }
+
+
 }

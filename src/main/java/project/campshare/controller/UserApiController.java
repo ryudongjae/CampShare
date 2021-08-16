@@ -6,6 +6,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import project.campshare.Model.userlogin.LoginService;
+import project.campshare.Model.usermodel.user.Account;
+import project.campshare.Model.usermodel.user.address.Address;
+import project.campshare.Model.usermodel.user.address.AddressBook;
 import project.campshare.annotation.CurrentUser;
 import project.campshare.annotation.LoginCheck;
 import project.campshare.domain.service.UserService;
@@ -13,6 +16,8 @@ import project.campshare.domain.service.email.EmailCertificationService;
 import project.campshare.domain.service.sms.SmsCertificationService;
 
 import javax.validation.Valid;
+
+import java.util.List;
 
 import static project.campshare.Model.usermodel.user.UserDto.*;
 import static project.campshare.util.ResponseConstants.*;
@@ -172,11 +177,58 @@ public class UserApiController {
         return OK;
     }
 
+    /**
+     * 환급 계좌 등록
+     * @param email
+     * @param account
+     * @return
+     */
     @LoginCheck
     @PatchMapping("/account")
-    public ResponseEntity changeAccount(@CurrentUser String email,@RequestBody ChangeAccountRequest request){
-        userService.updateAccount(email,request);
+    public ResponseEntity changeAccount(@CurrentUser String email,@RequestBody Account account){
+        userService.updateAccount(email,account);
         return OK;
     }
 
+    @LoginCheck
+    @GetMapping("/account")
+    public ResponseEntity<Account> getAccountResource(@CurrentUser String email){
+        Account account = userService.getAccount(email);
+        return OK;
+    }
+
+    @LoginCheck
+    @PostMapping("/addressBook")
+    public ResponseEntity addAddressBook(@CurrentUser String email, @RequestBody Address address){
+        userService.addAddressBook(email,address);
+        return OK;
+    }
+
+    @LoginCheck
+    @GetMapping("/addressBook")
+    public ResponseEntity<List<AddressBook>> getAddressBookResource(@CurrentUser String email){
+        List<AddressBook> addressBook = userService.getAddressBook(email);
+        return OK;
+    }
+
+    @LoginCheck
+    @DeleteMapping("/addressBook")
+    public ResponseEntity deleteAddressBook(@RequestBody ChangeAddressRequest request){
+        userService.deleteAddressBook(request);
+        return OK;
+    }
+
+    @LoginCheck
+    @PatchMapping("/addressBook")
+    public ResponseEntity updateAddressBook(@RequestBody ChangeAddressRequest request){
+        userService.updateAddressBook(request);
+        return OK;
+    }
+
+    @PatchMapping("/nickname")
+    public ResponseEntity updateNickname(@CurrentUser String email,@RequestBody SaveRequest request){
+        userService.updateNickname(email,request);
+        return OK;
+
+    }
 }

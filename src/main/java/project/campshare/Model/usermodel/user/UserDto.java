@@ -1,17 +1,18 @@
 package project.campshare.Model.usermodel.user;
 
-import io.lettuce.core.ExperimentalLettuceCoroutinesApi;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.validator.constraints.Length;
+import project.campshare.Model.usermodel.user.address.Address;
 import project.campshare.encrypt.EncryptionService;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
+import java.time.LocalDateTime;
 
 @Getter
 @Builder
@@ -51,6 +52,7 @@ public class UserDto {
             return User.builder()
                     .email(this.email)
                     .password(this.password)
+                    .nicknameModifiedDate(LocalDateTime.now())
                     .nickname(this.nickname)
                     .phone(this.phone)
                     .build();
@@ -125,8 +127,8 @@ public class UserDto {
             this.passwordBefore = encryptionService.encrypt(passwordBefore);
         }
 
-        public static ChangePasswordRequest of(String email,String newPassword,String existingPassword){
-            return new ChangePasswordRequest(email,newPassword,existingPassword);
+        public static ChangePasswordRequest of(String email,String passwordAfter,String passwordBefore){
+            return new ChangePasswordRequest(email,passwordAfter,passwordBefore);
         }
     }
 
@@ -138,13 +140,15 @@ public class UserDto {
 
     @Getter
     @AllArgsConstructor
-    public static class ChangeAccountRequest{
-        private String bankName;
-        private String accountNumber;
-        private String depositor;
+    public static class ChangeAddressRequest{
+        private Long id;
+        private String addressName;
+        private String roadNameAddress;
+        private String detailedAddress;
+        private String postalCode;
 
-        public static ChangeAccountRequest of(String bankName,String accountNumber,String depositor){
-            return new ChangeAccountRequest(bankName,accountNumber,depositor);
+        public static ChangeAddressRequest of(Long id,String addressName,String roadNameAddress,String detailedAddress,String postalCode){
+            return new ChangeAddressRequest(id,addressName,roadNameAddress,detailedAddress,postalCode);
         }
     }
 

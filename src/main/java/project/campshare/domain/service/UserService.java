@@ -4,7 +4,11 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import project.campshare.Model.usermodel.user.Account;
 import project.campshare.Model.usermodel.user.User;
+import project.campshare.Model.usermodel.user.address.Address;
+import project.campshare.Model.usermodel.user.address.AddressBook;
+import project.campshare.Model.usermodel.user.address.AddressBookRepository;
 import project.campshare.domain.repository.UserRepository;
 import project.campshare.encrypt.EncryptionService;
 import project.campshare.exception.user.WrongPasswordException;
@@ -26,6 +30,7 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final EncryptionService encryptionService;
+    private final AddressBookRepository addressBookRepository;
 
 
     //데이터 조회용. 추후 삭제
@@ -40,7 +45,7 @@ public class UserService {
         }
 
         if (nicknameDuplicateCheck(userDto.getNickname())) {
-            throw new DuplicateNicknameException("이미 존재하는 닉네임 입니다. 다른 닉네임을 사용해주세요.");
+            throw new DuplicateNicknameException();
         }
         userDto.passwordEncryption(encryptionService);
         return userRepository.save(userDto.toEntity());
@@ -89,7 +94,6 @@ public class UserService {
         request.passwordEncryption(encryptionService);
         String passwordBefore = request.getPasswordBefore();
         String passwordAfter = request.getPasswordAfter();
-        System.out.println(email);
         if(!userRepository.existsByEmailAndPassword(email,passwordBefore)){
             throw new UnauthenticatedUserException("이전 비밀번호가 일치하지 않습니다.");
         }
@@ -109,12 +113,56 @@ public class UserService {
         userRepository.deleteByEmail(email);
     }
 
-    public void updateAccount(String email,ChangeAccountRequest request){
+    public void updateAccount(String email, Account account){
         User user = userRepository.findByEmail(email)
-                .orElseThrow(() ->new UnauthenticatedUserException("Unauthenticated user"));
-        String bankName =request.getBankName();
-        String accountNumber = request.getAccountNumber();
-        String depositor = request.getDepositor();
-        user.updateAccount(bankName,accountNumber,depositor);
+                .orElseThrow(() ->new UserNotFoundException("존재하지 않는 사용자입니다."));
+        user.updateAccount(account);
     }
+
+
+    public Account getAccount(String email) {
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(()-> new UserNotFoundException("존재하지 않는 사용자입니다."));
+
+        return user.getAccount();
+    }
+    public List<AddressBook> getAddressBook(String email) {
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new UserNotFoundException("존재하지 않는 사용자입니다."));
+        return user.getAddressBook();
+    }
+
+    @Transactional
+    public void addAddressBook(String email, Address address) {
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new UserNotFoundException("존재하지 않는 사용자입니다."));
+
+        user.addAddressBook(address);
+    }
+
+    @Transactional
+    public void deleteAddressBook(ChangeAddressRequest request) {
+        Long addressBookId = request.getId();
+        addressBookRepository.deleteById(addressBookId);
+    }
+
+    @Transactional
+    public void updateAddressBook(ChangeAddressRequest request) {
+        Long addressBookId = request.getId();
+        AddressBook addressBook = addressBookRepository.findById(addressBookId)
+                .orElseThrow();
+
+        addressBook.updateAddressBook(request);
+    }
+
+    public void updateNickname(String email, SaveRequest request) {
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new UserNotFoundException("존재하지 않는 사용자 입니다."));
+
+        if(nicknameDuplicateCheck(request.getNickname())){
+            throw new DuplicateNicknameException();
+        }
+        user.updateNickname(request);
+    }
+
 }
