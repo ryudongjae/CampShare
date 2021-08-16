@@ -1,12 +1,13 @@
 package project.campshare.Model.usermodel.user;
 
+import jdk.dynalink.linker.LinkerServices;
 import lombok.*;
-import javax.persistence.Embedded;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+
+import javax.persistence.*;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 import static project.campshare.Model.usermodel.user.UserDto.*;
 
@@ -18,24 +19,31 @@ import static project.campshare.Model.usermodel.user.UserDto.*;
 public class User extends BaseTimeEntity {
     @Id
     @GeneratedValue
+    @Column(name = "USER_ID")
     private Long id;
 
+    @Column(name = "USER_EMAIL")
     private String email;
 
+    @Column(name = "USER_PASSWORD")
     private String password;
 
+    @Column(name = "USER_NICKNAME")
     private String nickname;
 
+    @Column(name = "USER_PHONENUMBER")
     private String phone;
 
     @Embedded
     private Address address;
 
+    @OneToMany(cascade = CascadeType.ALL,orphanRemoval = true)
+    @JoinColumn(name = "USER_ID")
+    private List<AddressBook> addressBook = new ArrayList<>();
+
     @Embedded
+    @Column(name = "USER_ACCOUNT")
     private Account account;
-
-    private LocalDateTime emailSandDate;
-
 
     public UserInfoDto toUserInfoDto() {
         return UserInfoDto.builder()
@@ -57,5 +65,10 @@ public class User extends BaseTimeEntity {
 
     public void updatePassword(String password){
         this.password = password;
+    }
+
+    public void updateAccount(String bankName,String accountNumber,String depositor){
+        Account account = new Account(bankName,accountNumber,depositor);
+        this.account = account;
     }
 }

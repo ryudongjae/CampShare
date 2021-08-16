@@ -11,6 +11,8 @@ import javax.persistence.Embedded;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Address {
-    private String roadAddress;
-    private String detailAddress;
+    private String addressName; //주소명
+    private String roadAddress; //도로명주소
+    private String detailAddress; //상세주소
+    private String postalCode; //우편번호
 }

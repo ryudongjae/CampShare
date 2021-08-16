@@ -136,6 +136,18 @@ public class UserDto {
         private String password;
     }
 
+    @Getter
+    @AllArgsConstructor
+    public static class ChangeAccountRequest{
+        private String bankName;
+        private String accountNumber;
+        private String depositor;
+
+        public static ChangeAccountRequest of(String bankName,String accountNumber,String depositor){
+            return new ChangeAccountRequest(bankName,accountNumber,depositor);
+        }
+    }
+
 
 
 }

@@ -37,7 +37,7 @@ public class SmsCertificationService {
     // 인증 메세지 내용 생성
     public String makeSmsContent(String certificationNumber) {
         SmsMessageTemplate content = new SmsMessageTemplate();
-        return content.getCertificationNumber(certificationNumber);
+        return content.buildCertificationNumber(certificationNumber);
     }
 
     public HashMap<String, String> makeParams(String to, String text) {

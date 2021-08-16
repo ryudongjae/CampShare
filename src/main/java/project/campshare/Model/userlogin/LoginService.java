@@ -47,6 +47,6 @@ public class LoginService {
 
 
     public UserDto.UserInfoDto getCurrentUser(String email){
-        return userRepository.findByEmail(email).orElseThrow(() -> new UnauthenticatedUserException("error : 인증되지 않은 사용자")).toUserInfoDto();
+        return userRepository.findByEmail(email).orElseThrow(() -> new UnauthenticatedUserException("존재하지 않는 사용자 입니다.")).toUserInfoDto();
     }
 }

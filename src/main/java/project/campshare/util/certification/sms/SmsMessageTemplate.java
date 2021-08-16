@@ -4,7 +4,12 @@ import lombok.Setter;
 
 @Setter
 public class SmsMessageTemplate {
-    public String getCertificationNumber(String certificationNumber){
-        return String.format("%s%s%s","[CAMP_SHARE] 인증번호: ",certificationNumber,"입니다.");
+    public String buildCertificationNumber(String certificationNumber){
+        StringBuilder sb = new StringBuilder();
+        sb.append("[camp-Share] 인증번호는 ");
+        sb.append(certificationNumber);
+        sb.append("입니다. ");
+
+        return sb.toString();
     }
 }

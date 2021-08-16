@@ -80,7 +80,7 @@ public class UserService {
         requestDto.passwordEncryption(encryptionService);
 
         User user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new UnauthenticatedUserException("Unauthenticated User"));
+                .orElseThrow(() -> new UserNotFoundException("존재하지 않는 사용자입니다."));
 
         user.updatePassword(requestDto.getPasswordAfter());
     }
@@ -107,5 +107,14 @@ public class UserService {
         }
 
         userRepository.deleteByEmail(email);
+    }
+
+    public void updateAccount(String email,ChangeAccountRequest request){
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() ->new UnauthenticatedUserException("Unauthenticated user"));
+        String bankName =request.getBankName();
+        String accountNumber = request.getAccountNumber();
+        String depositor = request.getDepositor();
+        user.updateAccount(bankName,accountNumber,depositor);
     }
 }

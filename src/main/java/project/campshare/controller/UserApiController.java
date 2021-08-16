@@ -115,13 +115,15 @@ public class UserApiController {
 
     //비밀번호 변경(로그인 안한 상태)
     @PatchMapping("/password-nonLogin")
-    public ResponseEntity changePassword(@Valid @RequestBody ChangePasswordRequest request){
+    public ResponseEntity changePassword(
+            @Valid @RequestBody ChangePasswordRequest request){
         userService.updatePasswordByForget(request);
         return OK;
     }
     //정보수정에서 비밀번호 변경
     @PatchMapping("/password")
-    public ResponseEntity changePassword(@CurrentUser String email,@Valid@RequestBody ChangePasswordRequest request){
+    public ResponseEntity changePassword(@CurrentUser String email,
+                                         @Valid@RequestBody ChangePasswordRequest request){
         userService.updatePassword(email,request);
         return OK;
     }
@@ -162,10 +164,18 @@ public class UserApiController {
 
     @DeleteMapping
     @LoginCheck
-    public ResponseEntity<Void>UserRemove(@RequestBody PasswordRequest requestDto,@CurrentUser String email){
+    public ResponseEntity<Void>UserRemove(@RequestBody PasswordRequest requestDto,
+                                          @CurrentUser String email){
         String password = requestDto.getPassword();
         userService.delete(email,password);
         loginService.logout();
+        return OK;
+    }
+
+    @LoginCheck
+    @PatchMapping("/account")
+    public ResponseEntity changeAccount(@CurrentUser String email,@RequestBody ChangeAccountRequest request){
+        userService.updateAccount(email,request);
         return OK;
     }
 
