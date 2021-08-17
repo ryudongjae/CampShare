@@ -81,6 +81,9 @@ public class User extends BaseTimeEntity {
         if(canModifiedNickname()){
             throw new UnableToChangeNicknameException("닉네임은 7일에 한번만 변경할 수 있습니다.");
         }
+        String nickname = request.getNickname();
+        this.nickname = nickname;
+        this.nicknameModifiedDate = LocalDateTime.now();
     }
 
     private boolean canModifiedNickname() {

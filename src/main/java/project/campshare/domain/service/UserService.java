@@ -154,7 +154,7 @@ public class UserService {
 
         addressBook.updateAddressBook(request);
     }
-
+    @Transactional
     public void updateNickname(String email, SaveRequest request) {
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new UserNotFoundException("존재하지 않는 사용자 입니다."));
