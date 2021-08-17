@@ -10,6 +10,7 @@ import project.campshare.Model.usermodel.user.address.Address;
 import project.campshare.Model.usermodel.user.address.AddressBook;
 import project.campshare.Model.usermodel.user.address.AddressBookRepository;
 import project.campshare.domain.repository.UserRepository;
+import project.campshare.dto.AddressBookDto;
 import project.campshare.encrypt.EncryptionService;
 import project.campshare.exception.user.WrongPasswordException;
 import project.campshare.exception.user.DuplicateEmailException;
@@ -20,7 +21,7 @@ import project.campshare.exception.user.UserNotFoundException;
 
 import java.util.List;
 
-import static project.campshare.Model.usermodel.user.UserDto.*;
+import static project.campshare.dto.UserDto.*;
 
 @Service
 @Slf4j
@@ -141,13 +142,13 @@ public class UserService {
     }
 
     @Transactional
-    public void deleteAddressBook(ChangeAddressRequest request) {
+    public void deleteAddressBook(AddressBookDto request) {
         Long addressBookId = request.getId();
         addressBookRepository.deleteById(addressBookId);
     }
 
     @Transactional
-    public void updateAddressBook(ChangeAddressRequest request) {
+    public void updateAddressBook(AddressBookDto request) {
         Long addressBookId = request.getId();
         AddressBook addressBook = addressBookRepository.findById(addressBookId)
                 .orElseThrow();

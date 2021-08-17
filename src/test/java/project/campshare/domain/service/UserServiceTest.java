@@ -10,10 +10,10 @@ import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import project.campshare.Model.usermodel.user.Account;
 import project.campshare.Model.usermodel.user.User;
-import project.campshare.Model.usermodel.user.UserDto;
-import project.campshare.Model.usermodel.user.UserDto.ChangeAddressRequest;
-import project.campshare.Model.usermodel.user.UserDto.ChangePasswordRequest;
-import project.campshare.Model.usermodel.user.UserDto.SaveRequest;
+import project.campshare.dto.AddressBookDto;
+import project.campshare.dto.UserDto;
+import project.campshare.dto.UserDto.ChangePasswordRequest;
+import project.campshare.dto.UserDto.SaveRequest;
 import project.campshare.Model.usermodel.user.address.Address;
 import project.campshare.Model.usermodel.user.address.AddressBook;
 import project.campshare.Model.usermodel.user.address.AddressBookRepository;
@@ -26,13 +26,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import static org.assertj.core.api.Assertions.as;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 import static org.mockito.internal.verification.VerificationModeFactory.atLeastOnce;
-import static project.campshare.Model.usermodel.user.UserDto.ChangePasswordRequest.of;
+import static project.campshare.dto.UserDto.ChangePasswordRequest.of;
 
 @ExtendWith(MockitoExtension.class)
 class UserServiceTest {
@@ -297,24 +296,23 @@ class UserServiceTest {
         //given
         Address address =new Address("seoul","guro","103","111");
         AddressBook addressBook = new AddressBook(address);
-        ChangeAddressRequest changeAddressRequest = ChangeAddressRequest
-                .of(2L,"seoul","gangnam","222","123");
+        AddressBookDto addressBookDto =new  AddressBookDto(2L,"seoul","gangnam","222","123");
         //when
-        when(addressBookRepository.findById(changeAddressRequest.getId()))
+        when(addressBookRepository.findById(addressBookDto.getId()))
                 .thenReturn(Optional.of(addressBook));
-        userService.updateAddressBook(changeAddressRequest);
+        userService.updateAddressBook(addressBookDto);
         //then
         assertThat(addressBook.getAddress().getAddressName())
-                .isEqualTo(changeAddressRequest.getAddressName());
+                .isEqualTo(addressBookDto.getAddressName());
 
         assertThat(addressBook.getAddress().getDetailAddress())
-                .isEqualTo(changeAddressRequest.getDetailedAddress());
+                .isEqualTo(addressBookDto.getDetailAddress());
 
         assertThat(addressBook.getAddress().getRoadAddress())
-                .isEqualTo(changeAddressRequest.getRoadNameAddress());
+                .isEqualTo(addressBookDto.getRoadNameAddress());
 
         assertThat(addressBook.getAddress().getPostalCode())
-                .isEqualTo(changeAddressRequest.getPostalCode());
+                .isEqualTo(addressBookDto.getPostalCode());
         verify(addressBookRepository, atLeastOnce()).findById(any());
 
     }

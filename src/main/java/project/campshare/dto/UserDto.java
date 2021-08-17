@@ -1,10 +1,12 @@
-package project.campshare.Model.usermodel.user;
+package project.campshare.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.validator.constraints.Length;
+import project.campshare.Model.usermodel.user.Account;
+import project.campshare.Model.usermodel.user.User;
 import project.campshare.Model.usermodel.user.address.Address;
 import project.campshare.encrypt.EncryptionService;
 
@@ -138,19 +140,6 @@ public class UserDto {
         private String password;
     }
 
-    @Getter
-    @AllArgsConstructor
-    public static class ChangeAddressRequest{
-        private Long id;
-        private String addressName;
-        private String roadNameAddress;
-        private String detailedAddress;
-        private String postalCode;
-
-        public static ChangeAddressRequest of(Long id,String addressName,String roadNameAddress,String detailedAddress,String postalCode){
-            return new ChangeAddressRequest(id,addressName,roadNameAddress,detailedAddress,postalCode);
-        }
-    }
 
 
 

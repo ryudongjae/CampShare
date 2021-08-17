@@ -4,10 +4,10 @@ import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import project.campshare.Model.usermodel.user.UserDto.ChangeAddressRequest;
+import project.campshare.dto.AddressBookDto;
+
 
 import javax.persistence.Embeddable;
-import javax.persistence.Embedded;
 
 @Embeddable
 @Getter
@@ -19,10 +19,10 @@ public class Address {
     private String detailAddress; //상세주소
     private String postalCode; //우편번호
 
-    public void updateAddress(ChangeAddressRequest request) {
+    public void updateAddress(AddressBookDto request) {
         this.addressName = request.getAddressName();
         this.roadAddress = request.getRoadNameAddress();
-        this.detailAddress = request.getDetailedAddress();
+        this.detailAddress = request.getDetailAddress();
         this.postalCode = request.getPostalCode();
     }
 }

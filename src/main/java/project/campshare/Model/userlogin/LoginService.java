@@ -2,7 +2,7 @@ package project.campshare.Model.userlogin;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import project.campshare.Model.usermodel.user.UserDto;
+import project.campshare.dto.UserDto;
 import project.campshare.domain.repository.UserRepository;
 import project.campshare.encrypt.EncryptionService;
 import project.campshare.exception.user.UnauthenticatedUserException;

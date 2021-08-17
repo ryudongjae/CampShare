@@ -14,12 +14,13 @@ import project.campshare.annotation.LoginCheck;
 import project.campshare.domain.service.UserService;
 import project.campshare.domain.service.email.EmailCertificationService;
 import project.campshare.domain.service.sms.SmsCertificationService;
+import project.campshare.dto.AddressBookDto;
 
 import javax.validation.Valid;
 
 import java.util.List;
 
-import static project.campshare.Model.usermodel.user.UserDto.*;
+import static project.campshare.dto.UserDto.*;
 import static project.campshare.util.ResponseConstants.*;
 
 /**
@@ -113,24 +114,21 @@ public class UserApiController {
 
     //이메일 인증
     @PostMapping("/email-certification/confirms")
-    public ResponseEntity emailVerification(@RequestBody EmailCertificationRequest request){
+    public void emailVerification(@RequestBody EmailCertificationRequest request){
         emailCertificationService.verifyEmail(request);
-        return OK;
     }
 
     //비밀번호 변경(로그인 안한 상태)
-    @PatchMapping("/password-nonLogin")
-    public ResponseEntity changePassword(
+    @PatchMapping("/forgot/password")
+    public void changePassword(
             @Valid @RequestBody ChangePasswordRequest request){
         userService.updatePasswordByForget(request);
-        return OK;
     }
     //정보수정에서 비밀번호 변경
     @PatchMapping("/password")
-    public ResponseEntity changePassword(@CurrentUser String email,
+    public void changePassword(@CurrentUser String email,
                                          @Valid@RequestBody ChangePasswordRequest request){
         userService.updatePassword(email,request);
-        return OK;
     }
 
     /**
@@ -139,10 +137,9 @@ public class UserApiController {
      * @return
      */
     @PostMapping("/login")
-    public ResponseEntity login(@RequestBody LoginRequest loginRequest) {
+    public void login(@RequestBody LoginRequest loginRequest) {
         loginService.existByEmailAndPassword(loginRequest);
         loginService.login(loginRequest.getEmail());
-        return OK;
     }
 
     /**
@@ -151,9 +148,8 @@ public class UserApiController {
      */
     @LoginCheck
     @DeleteMapping("/logout")
-    public ResponseEntity logout() {
+    public void logout() {
         loginService.logout();
-        return OK;
     }
     /**
      * 내 정보
@@ -185,9 +181,9 @@ public class UserApiController {
      */
     @LoginCheck
     @PatchMapping("/account")
-    public ResponseEntity changeAccount(@CurrentUser String email,@RequestBody Account account){
+    public void changeAccount(@CurrentUser String email,@RequestBody Account account){
         userService.updateAccount(email,account);
-        return OK;
+
     }
 
     @LoginCheck
@@ -199,9 +195,8 @@ public class UserApiController {
 
     @LoginCheck
     @PostMapping("/addressBook")
-    public ResponseEntity addAddressBook(@CurrentUser String email, @RequestBody Address address){
+    public void addAddressBook(@CurrentUser String email, @RequestBody Address address){
         userService.addAddressBook(email,address);
-        return OK;
     }
 
     @LoginCheck
@@ -213,22 +208,19 @@ public class UserApiController {
 
     @LoginCheck
     @DeleteMapping("/addressBook")
-    public ResponseEntity deleteAddressBook(@RequestBody ChangeAddressRequest request){
+    public void deleteAddressBook(@RequestBody AddressBookDto request){
         userService.deleteAddressBook(request);
-        return OK;
     }
 
     @LoginCheck
     @PatchMapping("/addressBook")
-    public ResponseEntity updateAddressBook(@RequestBody ChangeAddressRequest request){
+    public void updateAddressBook(@RequestBody AddressBookDto request){
         userService.updateAddressBook(request);
-        return OK;
     }
 
     @PatchMapping("/nickname")
-    public ResponseEntity updateNickname(@CurrentUser String email,@RequestBody SaveRequest request){
+    public void updateNickname(@CurrentUser String email,@RequestBody SaveRequest request){
         userService.updateNickname(email,request);
-        return OK;
 
     }
 }

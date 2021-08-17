@@ -4,7 +4,8 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import project.campshare.Model.usermodel.user.UserDto.ChangeAddressRequest;
+import project.campshare.dto.AddressBookDto;
+
 
 import javax.persistence.*;
 
@@ -24,7 +25,7 @@ public class AddressBook {
         this.address = address;
     }
 
-    public void updateAddressBook(ChangeAddressRequest request){
+    public void updateAddressBook(AddressBookDto request){
         address.updateAddress(request);
     }
 }

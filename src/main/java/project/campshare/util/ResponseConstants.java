@@ -28,6 +28,8 @@ public class ResponseConstants {
                     "Unauthenticated user", HttpStatus.UNAUTHORIZED
             );
 
+    public static final ResponseEntity FAIL_TO_CHANGE_NICKNAME =
+            new ResponseEntity("닉네임은 7일에 한번씩 변경이 가능합니다.",HttpStatus.BAD_REQUEST);
 
     public static final ResponseEntity<String>WRONG_PASSWORD =
             new ResponseEntity<>("잘못된 비밀번호입니다. 비밀번호를 확인해주세요.", HttpStatus.UNAUTHORIZED);

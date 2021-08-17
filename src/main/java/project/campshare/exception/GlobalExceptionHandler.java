@@ -66,7 +66,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(UnableToChangeNicknameException.class)
     private final ResponseEntity handleUnableToChangeNicknameException(UnableToChangeNicknameException ex) {
         log.error("닉네임은 7일에 한번만 변경 가능합니다.",ex);
-        return new ResponseEntity("닉네임은 7일에 한번만 변경 가능합니다.",HttpStatus.BAD_REQUEST);
+        return FAIL_TO_CHANGE_NICKNAME;
     }
 
 }
