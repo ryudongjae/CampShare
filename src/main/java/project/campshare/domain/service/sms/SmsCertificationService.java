@@ -8,15 +8,13 @@ import net.nurigo.java_sdk.exceptions.CoolsmsException;
 import org.json.simple.JSONObject;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Service;
-import project.campshare.Model.usermodel.user.UserDto;
-import project.campshare.Model.usermodel.user.UserDto.SmsCertificationRequest;
+import project.campshare.dto.UserDto.SmsCertificationRequest;
 import project.campshare.dao.SmsCertificationDao;
 import project.campshare.exception.certification.AuthenticationNumberMismatchException;
 import project.campshare.exception.certification.smscertification.SmsSendFailedException;
 import project.campshare.util.certification.sms.SmsMessageTemplate;
 
 import java.util.HashMap;
-import java.util.Random;
 
 import static project.campshare.util.RandomNumberGeneration.makeRandomNumber;
 import static project.campshare.util.certification.sms.CoolSmsConstants.*;

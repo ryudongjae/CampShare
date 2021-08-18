@@ -1,8 +1,8 @@
-package project.campshare.Model.usermodel.user;
+package project.campshare.domain.model.usermodel.user;
 
 import lombok.*;
-import project.campshare.Model.usermodel.user.address.Address;
-import project.campshare.Model.usermodel.user.address.AddressBook;
+import project.campshare.domain.model.usermodel.user.address.Address;
+import project.campshare.domain.model.usermodel.user.address.AddressBook;
 import project.campshare.exception.user.UnableToChangeNicknameException;
 
 import javax.persistence.*;
@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-import static project.campshare.Model.usermodel.user.UserDto.*;
+import static project.campshare.dto.UserDto.*;
 
 @Getter
 @Entity

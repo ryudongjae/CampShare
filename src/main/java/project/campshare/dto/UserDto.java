@@ -5,9 +5,9 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.validator.constraints.Length;
-import project.campshare.Model.usermodel.user.Account;
-import project.campshare.Model.usermodel.user.User;
-import project.campshare.Model.usermodel.user.address.Address;
+import project.campshare.domain.model.usermodel.user.Account;
+import project.campshare.domain.model.usermodel.user.User;
+import project.campshare.domain.model.usermodel.user.address.Address;
 import project.campshare.encrypt.EncryptionService;
 
 import javax.validation.constraints.Email;

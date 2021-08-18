@@ -1,4 +1,4 @@
-package project.campshare.Model.usermodel.user;
+package project.campshare.domain.model.usermodel.user;
 
 import lombok.Getter;
 import org.springframework.data.annotation.CreatedDate;

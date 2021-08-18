@@ -1,4 +1,4 @@
-package project.campshare.Model.userlogin;
+package project.campshare.domain.model.userlogin;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

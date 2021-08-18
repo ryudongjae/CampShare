@@ -4,7 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
-import project.campshare.Model.userlogin.LoginService;
+import project.campshare.domain.model.userlogin.LoginService;
 import project.campshare.annotation.LoginCheck;
 import project.campshare.exception.user.UnauthenticatedUserException;
 

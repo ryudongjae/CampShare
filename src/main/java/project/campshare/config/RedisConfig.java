@@ -10,8 +10,11 @@ public class RedisConfig {
 
     @Value("${spring.redis.host}")
     private String redisHost;
+
     @Value("${spring.redis.port}")
     private int redisPort;
+
+
     /*
      * 자바에서 레디스를 사용하기 위해서 레디스 클라이언트가 필요하다.
      * Spring Data Redis에서는 Jedis와 Lecttuce를 지원한다.
@@ -23,6 +26,7 @@ public class RedisConfig {
         LettuceConnectionFactory lettuceConnectionFactory = new LettuceConnectionFactory(redisHost, redisPort);
         return lettuceConnectionFactory;
     }
+
     /*
      * RedisTemplate는 커넥션 위에서 레디스 커맨드를 도와준다.
      * 레디스의 데이터 저장방식은 byte[]이기 때문에 값을 저장하고 가져오기 위해서는 직렬화가 필요하다.
