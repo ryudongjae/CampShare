@@ -33,4 +33,7 @@ public class ResponseConstants {
 
     public static final ResponseEntity<String>WRONG_PASSWORD =
             new ResponseEntity<>("잘못된 비밀번호입니다. 비밀번호를 확인해주세요.", HttpStatus.UNAUTHORIZED);
+
+    public static final ResponseEntity<String> PRODUCT_NOT_FOUND =
+            new ResponseEntity<>("존재하지 않는 상품입니다.",HttpStatus.BAD_REQUEST);
 }
