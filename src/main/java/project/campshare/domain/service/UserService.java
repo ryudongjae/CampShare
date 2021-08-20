@@ -10,6 +10,7 @@ import project.campshare.domain.model.usermodel.user.address.Address;
 import project.campshare.domain.model.usermodel.user.address.AddressBook;
 import project.campshare.domain.model.usermodel.user.address.AddressBookRepository;
 import project.campshare.domain.repository.UserRepository;
+import project.campshare.domain.service.email.EmailCertificationService;
 import project.campshare.dto.AddressBookDto;
 import project.campshare.encrypt.EncryptionService;
 import project.campshare.exception.user.WrongPasswordException;
@@ -32,7 +33,7 @@ public class UserService {
     private final UserRepository userRepository;
     private final EncryptionService encryptionService;
     private final AddressBookRepository addressBookRepository;
-
+    private final EmailCertificationService emailCertificationService;
 
     //데이터 조회용. 추후 삭제
     public List<User> findAll() {
@@ -112,6 +113,13 @@ public class UserService {
         }
 
         userRepository.deleteByEmail(email);
+    }
+
+    @Transactional
+    public void validToken(String token,String email){
+        emailCertificationService.verifyEmail(token,email);
+        User user = userRepository.findByEmail(email).orElseThrow(() -> new UserNotFoundException("존재하지 않는 사용자 입니다."));
+        user.updateEmailVerified();
     }
 
     public void updateAccount(String email, Account account){

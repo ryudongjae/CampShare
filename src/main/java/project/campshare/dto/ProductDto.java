@@ -1,5 +1,6 @@
 package project.campshare.dto;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -52,7 +53,7 @@ public class ProductDto {
 
     }
     @Getter
-    @NoArgsConstructor
+    @AllArgsConstructor
     @Builder
     public static class ProductInfoResponse{
         private Long id;

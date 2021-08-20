@@ -47,6 +47,8 @@ public class User extends BaseTimeEntity {
     @Column(name = "USER_ACCOUNT")
     private Account account;
 
+    private boolean emailVerified;
+
     public UserInfoDto toUserInfoDto() {
         return UserInfoDto.builder()
                 .email(this.getEmail())
@@ -90,5 +92,11 @@ public class User extends BaseTimeEntity {
         return !(this.nicknameModifiedDate.isBefore(LocalDateTime.now().minusDays(7)));
     }
 
+    public void updateEmailVerified(){
+        this.emailVerified =true;
+    }
 
+    public boolean getEmailVerified() {
+        return !(this.emailVerified);
+    }
 }

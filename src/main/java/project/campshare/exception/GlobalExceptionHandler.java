@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
 import project.campshare.exception.certification.AuthenticationNumberMismatchException;
+import project.campshare.exception.product.ProductNotFoundException;
 import project.campshare.exception.user.*;
 
 import java.time.LocalDateTime;
@@ -64,9 +65,16 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(UnableToChangeNicknameException.class)
-    private final ResponseEntity handleUnableToChangeNicknameException(UnableToChangeNicknameException ex) {
+    public final ResponseEntity<String> handleUnableToChangeNicknameException(UnableToChangeNicknameException ex) {
         log.error("닉네임은 7일에 한번만 변경 가능합니다.",ex);
         return FAIL_TO_CHANGE_NICKNAME;
     }
+
+    @ExceptionHandler(ProductNotFoundException.class)
+    public final ResponseEntity<String> productNotFoundException(ProductNotFoundException ex){
+        log.debug("존재하지 않는 상품입니다.",ex);
+        return PRODUCT_NOT_FOUND;
+    }
+
 
 }

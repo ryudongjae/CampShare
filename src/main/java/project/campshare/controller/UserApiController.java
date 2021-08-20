@@ -5,7 +5,7 @@ package project.campshare.controller;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import project.campshare.domain.model.userlogin.LoginService;
+import project.campshare.logincommand.userlogin.LoginService;
 import project.campshare.domain.model.usermodel.user.Account;
 import project.campshare.domain.model.usermodel.user.address.Address;
 import project.campshare.domain.model.usermodel.user.address.AddressBook;
@@ -70,7 +70,13 @@ public class UserApiController {
     @PostMapping
     public ResponseEntity<Void> createUser(@Valid @RequestBody SaveRequest requestDto) {
         userService.saveUser(requestDto);
+        emailCertificationService.sendEmailForEmailCheck(requestDto.getEmail());
         return CREATED;
+    }
+
+    @GetMapping("/email-check-token")
+    public void emailCheck(String token ,String email){
+        userService.validToken(token,email);
     }
 
     /**
@@ -108,7 +114,7 @@ public class UserApiController {
     //이메일로 인증번호 전송
     @PostMapping("/email-certification/sends")
     public ResponseEntity sendEmail(@RequestBody EmailCertificationRequest request){
-        emailCertificationService.sendEmail(request.getEmail());
+        emailCertificationService.sendEmailForCertification(request.getEmail());
         return CREATED;
     }
 
@@ -138,8 +144,7 @@ public class UserApiController {
      */
     @PostMapping("/login")
     public void login(@RequestBody LoginRequest loginRequest) {
-        loginService.existByEmailAndPassword(loginRequest);
-        loginService.login(loginRequest.getEmail());
+        loginService.login(loginRequest);
     }
 
     /**

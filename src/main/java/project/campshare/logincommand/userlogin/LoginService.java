@@ -1,7 +1,8 @@
-package project.campshare.domain.model.userlogin;
+package project.campshare.logincommand.userlogin;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import project.campshare.domain.model.usermodel.user.User;
 import project.campshare.dto.UserDto;
 import project.campshare.domain.repository.UserRepository;
 import project.campshare.encrypt.EncryptionService;
@@ -33,8 +34,16 @@ public class LoginService {
         }
     }
 
-    public void login(String email) {
-        session.setAttribute(USER_ID, email);
+    public void login(UserDto.LoginRequest request) {
+        existByEmailAndPassword(request);
+        String email = request.getEmail();
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new UserNotFoundException("존재하지 않는 사용자 입니다."));
+
+        if(user.getEmailVerified()){
+            throw new UnauthenticatedUserException("이메일 인증을 먼저 진행 후 로그인 해주세요.");
+        }
+        session.setAttribute(USER_ID,email);
     }
 
     public void logout() {

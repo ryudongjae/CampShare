@@ -26,6 +26,10 @@ public class EmailCertificationDao {
         stringRedisTemplate.delete(PREFIX+email);
     }
 
+    public void createEmailToken(String email,String token){
+        stringRedisTemplate.opsForValue().set(PREFIX+email,token);
+    }
+
     public boolean hasKey(String email){
         return stringRedisTemplate.hasKey(PREFIX+email);
     }

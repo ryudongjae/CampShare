@@ -4,6 +4,9 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import project.campshare.domain.model.usermodel.user.BaseTimeEntity;
+import project.campshare.dto.ProductDto;
+import project.campshare.dto.ProductDto.ProductInfoResponse;
+import project.campshare.dto.ProductDto.SaveRequest;
 
 import javax.persistence.*;
 
@@ -29,12 +32,12 @@ public class Product extends BaseTimeEntity {
     @Enumerated(EnumType.STRING)
     private ProductState productState;
 
-    //거래방식
+    @Enumerated(EnumType.STRING)
+    private TransactionMethod transactionMethod;
 
     @Builder
-
-    public Product(Long id, String name, String salePrice, String productDescription,
-                   String releasePrice, TransactionStatus transactionStatus, ProductState productState) {
+    public Product(Long id, String name, String salePrice, String productDescription, String releasePrice,
+                   TransactionStatus transactionStatus, ProductState productState, TransactionMethod transactionMethod) {
         this.id = id;
         this.name = name;
         this.salePrice = salePrice;
@@ -42,5 +45,30 @@ public class Product extends BaseTimeEntity {
         this.releasePrice = releasePrice;
         this.transactionStatus = transactionStatus;
         this.productState = productState;
+        this.transactionMethod = transactionMethod;
     }
+
+    public ProductInfoResponse toProductInfoResponse(){
+        return ProductInfoResponse.builder()
+                .id(this.id)
+                .name(this.name)
+                .salePrice(this.salePrice)
+                .productDescription(this.productDescription)
+                .releasePrice(this.releasePrice)
+                .transactionStatus(this.transactionStatus)
+                .productState(this.productState)
+                .transactionMethod(this.transactionMethod)
+                .build();
+    }
+
+    public void update(SaveRequest request){
+        this.name = name;
+        this.salePrice = salePrice;
+        this.productDescription = productDescription;
+        this.releasePrice = releasePrice;
+        this.transactionStatus = transactionStatus;
+        this.productState = productState;
+        this.transactionMethod = transactionMethod;
+    }
+
 }
