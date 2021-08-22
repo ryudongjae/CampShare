@@ -56,5 +56,9 @@
 1.인증 토큰 만료기간 설정 및 비즈니스 로직 수정   
 2.외부 주입 방식 변경   
 3.loginService -> SessionLoginService 로 변경   
-4.LoginCheckInterceptor에서 권한이 AUTH인 경우 이메일 인증 여부를 추가적으로 확인하도록 수정
+4.LoginCheckInterceptor에서 권한이 AUTH인 경우 이메일 인증 여부를 추가적으로 확인하도록 수정  
+
+####8/23 ->  
+1.Admin Entity분리 
+2.
 
