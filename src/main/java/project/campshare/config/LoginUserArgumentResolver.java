@@ -7,14 +7,14 @@ import org.springframework.web.bind.support.WebDataBinderFactory;
 import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.ModelAndViewContainer;
-import project.campshare.domain.model.userlogin.LoginService;
+import project.campshare.logincommand.userlogin.SessionLoginService;
 import project.campshare.annotation.CurrentUser;
 
 @Component
 @RequiredArgsConstructor
 public class LoginUserArgumentResolver implements HandlerMethodArgumentResolver {
 
-    private final LoginService loginService;
+    private final SessionLoginService loginService;
 
     @Override
     public boolean supportsParameter(MethodParameter parameter) {

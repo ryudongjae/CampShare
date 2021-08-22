@@ -1,5 +1,7 @@
 package project.campshare.util.certification.email;
 
+import static project.campshare.util.certification.email.EmailConstants.DOMAIN_NAME;
+
 public class EmailContentTemplate {
 
     public String buildCertificationNumber(String certificationNumber){
@@ -13,7 +15,8 @@ public class EmailContentTemplate {
 
     public String buildEmailCheckContent(String token,String email) {
         StringBuilder builder = new StringBuilder();
-        builder.append("http://localhost:8080/users/email-check-token?token=");
+        builder.append(DOMAIN_NAME);
+        builder.append("/user/email-check-token?token=");
         builder.append(token);
         builder.append("&email=");
         builder.append(email);

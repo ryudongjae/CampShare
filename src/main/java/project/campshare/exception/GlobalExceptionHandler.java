@@ -19,26 +19,30 @@ import static project.campshare.util.ResponseConstants.*;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
     @ExceptionHandler(DuplicateEmailException.class)
-    protected final ResponseEntity<String> duplicateEmailException(DuplicateEmailException ex, WebRequest request) {
+    protected final ResponseEntity<String> duplicateEmailException(
+            DuplicateEmailException ex, WebRequest request) {
         log.debug("Duplicate email :: {}, detection time = {}",request.getDescription(false));
         return DUPLICATION_EMAIL;
     }
 
     @ExceptionHandler(DuplicateNicknameException.class)
-    protected final ResponseEntity<String> duplicateNicknameException(DuplicateNicknameException ex, WebRequest request) {
+    protected final ResponseEntity<String> duplicateNicknameException(
+            DuplicateNicknameException ex, WebRequest request) {
         log.debug("Duplicate nickname :: {}, detection time = {}",request.getDescription(false));
         return DUPLICATION_NICKNAME;
     }
 
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    protected ResponseEntity<String> methodArgumentNotValidException(MethodArgumentNotValidException ex) {
+    protected ResponseEntity<String> methodArgumentNotValidException(
+            MethodArgumentNotValidException ex) {
         log.error(ex.getFieldError().getDefaultMessage(),ex);
         return new ResponseEntity<>(ex.getFieldError().getDefaultMessage(),HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(UserNotFoundException.class)
-    public final ResponseEntity<String> handleUserNotFoundException(UserNotFoundException ex, WebRequest request) {
+    public final ResponseEntity<String> handleUserNotFoundException(
+            UserNotFoundException ex, WebRequest request) {
         log.debug("로그인 실패 : 존재하지 않는 ID 또는 패스워드 불일치",request.getDescription(false));
         return USER_NOT_FOUND;
     }
@@ -52,29 +56,40 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(AuthenticationNumberMismatchException.class)
-    public final ResponseEntity<Void>handleAuthenticationNumberMismatchException(AuthenticationNumberMismatchException ex){
+    public final ResponseEntity<Void>handleAuthenticationNumberMismatchException(
+            AuthenticationNumberMismatchException ex){
         log.debug("인증번호 불일치",ex);
         return BAD_REQUEST;
     }
 
 
     @ExceptionHandler(WrongPasswordException.class)
-    public final ResponseEntity<String> handleWrongPasswordException(WrongPasswordException ex,WebRequest request){
+    public final ResponseEntity<String> handleWrongPasswordException(
+            WrongPasswordException ex,WebRequest request){
         log.debug("Wrong_password :: {}, detection time = {}",request.getDescription(false));
         return WRONG_PASSWORD;
     }
 
     @ExceptionHandler(UnableToChangeNicknameException.class)
-    public final ResponseEntity<String> handleUnableToChangeNicknameException(UnableToChangeNicknameException ex) {
+    public final ResponseEntity<String> handleUnableToChangeNicknameException(
+            UnableToChangeNicknameException ex) {
         log.error("닉네임은 7일에 한번만 변경 가능합니다.",ex);
         return FAIL_TO_CHANGE_NICKNAME;
     }
 
     @ExceptionHandler(ProductNotFoundException.class)
-    public final ResponseEntity<String> productNotFoundException(ProductNotFoundException ex){
+    public final ResponseEntity<String> productNotFoundException(
+            ProductNotFoundException ex){
         log.debug("존재하지 않는 상품입니다.",ex);
         return PRODUCT_NOT_FOUND;
     }
 
+
+    @ExceptionHandler(TokenExpiredException.class)
+    public final ResponseEntity handleTokenExpiredException ( TokenExpiredException ex,WebRequest request){
+        log.debug("Token Expired :: {} , detection time = {}",request.getDescription(false), LocalDateTime.now(), ex);
+        return TOKEN_EXPIRED;
+
+    }
 
 }

@@ -1,4 +1,4 @@
-package project.campshare.domain.model.userlogin;
+package project.campshare.logincommand.userlogin;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -20,7 +20,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-class LoginServiceTest {
+class SessionLoginServiceTest {
 
     @Mock
     UserRepository userRepository;
@@ -29,7 +29,7 @@ class LoginServiceTest {
     EncryptionService encryptionService;
 
     @InjectMocks
-    LoginService loginService;
+    SessionLoginService sessionLoginService;
 
     private User user;
 
@@ -59,7 +59,7 @@ class LoginServiceTest {
                encryptionService.encrypt(loginRequest.getPassword())))
                .thenReturn(true);
 
-       loginService.existByEmailAndPassword(loginRequest);
+       sessionLoginService.existByEmailAndPassword(loginRequest);
 
        verify(userRepository,atLeastOnce()).existsByEmailAndPassword(loginRequest.getEmail(),encryptionService.encrypt(loginRequest.getPassword()));
 
@@ -75,7 +75,7 @@ class LoginServiceTest {
                 .thenReturn(false);
 
         assertThrows(UserNotFoundException.class,
-                () -> loginService
+                () -> sessionLoginService
                         .existByEmailAndPassword(loginRequest));
 
         verify(userRepository, atLeastOnce())
@@ -91,7 +91,7 @@ class LoginServiceTest {
 
         when(userRepository.findByEmail(loginRequest.getEmail())).thenReturn(java.util.Optional.ofNullable(user));
 
-        UserInfoDto userInfoDto = loginService.getCurrentUser(loginRequest.getEmail());
+        UserInfoDto userInfoDto = sessionLoginService.getCurrentUser(loginRequest.getEmail());
 
         assertThat(userInfoDto).isNotNull();
         assertThat(userInfoDto.getEmail()).isEqualTo(user.getEmail());

@@ -5,7 +5,7 @@ package project.campshare.controller;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import project.campshare.logincommand.userlogin.LoginService;
+import project.campshare.logincommand.userlogin.SessionLoginService;
 import project.campshare.domain.model.usermodel.user.Account;
 import project.campshare.domain.model.usermodel.user.address.Address;
 import project.campshare.domain.model.usermodel.user.address.AddressBook;
@@ -34,7 +34,7 @@ import static project.campshare.util.ResponseConstants.*;
 @RestController
 public class UserApiController {
 
-    private final LoginService loginService;
+    private final SessionLoginService sessionLoginService;
 
     private final UserService userService;
 
@@ -88,6 +88,11 @@ public class UserApiController {
     public ResponseEntity<Void> sendSms(@RequestBody SmsCertificationRequest requestDto) {
         smsCertificationService.sendSms(requestDto.getPhone());
         return CREATED;
+    }
+
+    @PostMapping("/resend-email-token")
+    public void resendEmailCheck(@CurrentUser String email){
+        emailCertificationService.sendEmailForCertification(email);
     }
 
     /**
@@ -144,7 +149,7 @@ public class UserApiController {
      */
     @PostMapping("/login")
     public void login(@RequestBody LoginRequest loginRequest) {
-        loginService.login(loginRequest);
+        sessionLoginService.login(loginRequest);
     }
 
     /**
@@ -154,7 +159,7 @@ public class UserApiController {
     @LoginCheck
     @DeleteMapping("/logout")
     public void logout() {
-        loginService.logout();
+        sessionLoginService.logout();
     }
     /**
      * 내 정보
@@ -164,7 +169,7 @@ public class UserApiController {
     @LoginCheck
     @GetMapping("/my-infos")
     public ResponseEntity<UserInfoDto> myPage(@CurrentUser String email) {
-        UserInfoDto loginUser = loginService.getCurrentUser(email);
+        UserInfoDto loginUser = sessionLoginService.getCurrentUser(email);
         return ResponseEntity.ok(loginUser);
     }
 
@@ -174,7 +179,7 @@ public class UserApiController {
                                           @CurrentUser String email){
         String password = requestDto.getPassword();
         userService.delete(email,password);
-        loginService.logout();
+        sessionLoginService.logout();
         return OK;
     }
 
