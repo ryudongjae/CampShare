@@ -1,4 +1,4 @@
-package project.campshare.domain.model.usermodel.user;
+package project.campshare.domain.model.user;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;

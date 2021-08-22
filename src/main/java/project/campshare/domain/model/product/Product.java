@@ -3,8 +3,7 @@ package project.campshare.domain.model.product;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import project.campshare.domain.model.usermodel.user.BaseTimeEntity;
-import project.campshare.dto.ProductDto;
+import project.campshare.domain.model.user.BaseTimeEntity;
 import project.campshare.dto.ProductDto.ProductInfoResponse;
 import project.campshare.dto.ProductDto.SaveRequest;
 

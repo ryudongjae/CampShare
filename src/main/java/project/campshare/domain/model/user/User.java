@@ -1,8 +1,8 @@
-package project.campshare.domain.model.usermodel.user;
+package project.campshare.domain.model.user;
 
 import lombok.*;
-import project.campshare.domain.model.usermodel.user.address.Address;
-import project.campshare.domain.model.usermodel.user.address.AddressBook;
+import project.campshare.domain.model.user.address.Address;
+import project.campshare.domain.model.user.address.AddressBook;
 import project.campshare.exception.user.UnableToChangeNicknameException;
 
 import javax.persistence.*;
@@ -15,20 +15,10 @@ import static project.campshare.dto.UserDto.*;
 
 @Getter
 @Entity
-@Builder
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
-public class User extends BaseTimeEntity {
-    @Id
-    @GeneratedValue
-    @Column(name = "USER_ID")
-    private Long id;
+public class User extends UserBase{
 
-    @Column(name = "USER_EMAIL")
-    private String email;
-
-    @Column(name = "USER_PASSWORD")
-    private String password;
 
     @Column(name = "USER_NICKNAME")
     private String nickname;
@@ -99,5 +89,15 @@ public class User extends BaseTimeEntity {
 
     public boolean getEmailVerified() {
         return this.emailVerified;
+    }
+
+    @Builder
+    public User(String email, String password, UserLevel userLevel,
+                String nickname, LocalDateTime nicknameModifiedDate, String phone) {
+        super( email, password, userLevel);
+        this.nickname = nickname;
+        this.nicknameModifiedDate = nicknameModifiedDate;
+        this.phone = phone;
+        this.userLevel = userLevel;
     }
 }

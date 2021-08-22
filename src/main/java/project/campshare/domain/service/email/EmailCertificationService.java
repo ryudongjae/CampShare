@@ -22,7 +22,6 @@ import static project.campshare.util.certification.email.EmailConstants.TITLE_EM
 @Slf4j
 @RequiredArgsConstructor
 @Service
-@ConfigurationProperties("certification-related-constants")
 public class EmailCertificationService {
 
     private final JavaMailSender mailSender;
@@ -52,11 +51,12 @@ public class EmailCertificationService {
         if(isVerify(request)){
             throw new AuthenticationNumberMismatchException("인증번호가 일치하지 않습니다.");
         }
-        emailVerificationDao.removeEmailCertification(request.getEmail());
+        emailCertificationNumberDao.removeEmailCertification(request.getEmail());
     }
+    //인증번호 일치 여부 확인 내부 로직
     public boolean isVerify(EmailCertificationRequest request) {
-        return !(emailVerificationDao.hasKey(request.getEmail()))&&
-                emailVerificationDao.getEmailCertification(request.getEmail())
+        return !(emailCertificationNumberDao.hasKey(request.getEmail()))&&
+                emailCertificationNumberDao.getEmailCertification(request.getEmail())
                         .equals(request.getCertificationNumber());
     }
 
@@ -106,19 +106,4 @@ public class EmailCertificationService {
         emailVerificationDao.removeEmailCertification(email);
     }
 
-    //인증번호 일치 여부 확인 내부 로직
-    private boolean isVerifyNumber(EmailCertificationRequest request){
-        return !(emailCertificationNumberDao.hasKey(request.getEmail()) &&
-                emailCertificationNumberDao.getEmailCertification(request.getEmail())
-                        .equals(request.getCertificationNumber()));
-    }
-
-
-    //인증번호 일치여부 검사
-    public void verifyEmailNumber(EmailCertificationRequest request){
-        if(isVerify(request)){
-            throw new TokenExpiredException("인증번호가 일치하지 않습니다.");
-        }
-        emailCertificationNumberDao.removeEmailCertification(request.getEmail());
-    }
 }

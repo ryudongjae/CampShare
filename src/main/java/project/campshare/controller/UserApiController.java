@@ -6,9 +6,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import project.campshare.logincommand.userlogin.SessionLoginService;
-import project.campshare.domain.model.usermodel.user.Account;
-import project.campshare.domain.model.usermodel.user.address.Address;
-import project.campshare.domain.model.usermodel.user.address.AddressBook;
+import project.campshare.domain.model.user.Account;
+import project.campshare.domain.model.user.address.Address;
+import project.campshare.domain.model.user.address.AddressBook;
 import project.campshare.annotation.CurrentUser;
 import project.campshare.annotation.LoginCheck;
 import project.campshare.domain.service.UserService;
@@ -76,7 +76,7 @@ public class UserApiController {
 
     @GetMapping("/email-check-token")
     public void emailCheck(String token ,String email){
-        userService.validToken(token,email);
+        userService.updateEmailToken(token,email);
     }
 
     /**

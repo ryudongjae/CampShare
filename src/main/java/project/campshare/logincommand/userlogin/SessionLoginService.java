@@ -2,7 +2,7 @@ package project.campshare.logincommand.userlogin;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import project.campshare.domain.model.usermodel.user.User;
+import project.campshare.domain.model.user.User;
 import project.campshare.dto.UserDto;
 import project.campshare.domain.repository.UserRepository;
 import project.campshare.encrypt.EncryptionService;
@@ -11,6 +11,7 @@ import project.campshare.exception.user.UserNotFoundException;
 
 import javax.servlet.http.HttpSession;
 
+import static project.campshare.util.UserConstants.AUTH;
 import static project.campshare.util.UserConstants.USER_ID;
 
 
@@ -38,10 +39,18 @@ public class SessionLoginService {
         existByEmailAndPassword(request);
         String email = request.getEmail();
         session.setAttribute(USER_ID,email);
+        setAuthSession(email);
+    }
+
+    public void setAuthSession(String email){
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new UserNotFoundException("존재하지 않는 사용자입니다."));
+        session.setAttribute(AUTH,user.getEmailVerified());
     }
 
     public void logout() {
         session.removeAttribute(USER_ID);
+        session.removeAttribute(AUTH);
     }
 
     public String getLoginUser() {
@@ -50,6 +59,11 @@ public class SessionLoginService {
 
 
     public UserDto.UserInfoDto getCurrentUser(String email){
-        return userRepository.findByEmail(email).orElseThrow(() -> new UnauthenticatedUserException("존재하지 않는 사용자 입니다.")).toUserInfoDto();
+        return userRepository.findByEmail(email)
+                .orElseThrow(() -> new UnauthenticatedUserException("존재하지 않는 사용자 입니다.")).toUserInfoDto();
+    }
+
+    public boolean isEmailAuth(){
+        return (boolean) session.getAttribute(AUTH);
     }
 }

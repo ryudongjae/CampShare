@@ -8,15 +8,15 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
-import project.campshare.domain.model.usermodel.user.Account;
-import project.campshare.domain.model.usermodel.user.User;
+import project.campshare.domain.model.user.Account;
+import project.campshare.domain.model.user.User;
 import project.campshare.dto.AddressBookDto;
 import project.campshare.dto.UserDto;
 import project.campshare.dto.UserDto.ChangePasswordRequest;
 import project.campshare.dto.UserDto.SaveRequest;
-import project.campshare.domain.model.usermodel.user.address.Address;
-import project.campshare.domain.model.usermodel.user.address.AddressBook;
-import project.campshare.domain.model.usermodel.user.address.AddressBookRepository;
+import project.campshare.domain.model.user.address.Address;
+import project.campshare.domain.model.user.address.AddressBook;
+import project.campshare.domain.model.user.address.AddressBookRepository;
 import project.campshare.domain.repository.UserRepository;
 import project.campshare.encrypt.EncryptionService;
 import project.campshare.exception.user.*;
@@ -269,7 +269,7 @@ class UserServiceTest {
                 .password("ryu11")
                 .nickname("ryu")
                 .phone("01011110000")
-                .addressBook(addressBooks)
+                //.addressBook(addressBooks)
                 .build();
         String email = "rdj1014@gmail.com";
         Address address1 = new Address("house1","street1","1","1001");
@@ -327,7 +327,7 @@ class UserServiceTest {
                 .password("ryu11")
                 .nickname("ryu")
                 .phone("01000001111")
-                .addressBook(addressBooks)
+                //.addressBook(addressBooks)
                 .build();
 
         String email = "rdj10149@gmail.com";

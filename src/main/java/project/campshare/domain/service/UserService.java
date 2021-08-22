@@ -4,11 +4,11 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import project.campshare.domain.model.usermodel.user.Account;
-import project.campshare.domain.model.usermodel.user.User;
-import project.campshare.domain.model.usermodel.user.address.Address;
-import project.campshare.domain.model.usermodel.user.address.AddressBook;
-import project.campshare.domain.model.usermodel.user.address.AddressBookRepository;
+import project.campshare.domain.model.user.Account;
+import project.campshare.domain.model.user.User;
+import project.campshare.domain.model.user.address.Address;
+import project.campshare.domain.model.user.address.AddressBook;
+import project.campshare.domain.model.user.address.AddressBookRepository;
 import project.campshare.domain.repository.UserRepository;
 import project.campshare.domain.service.email.EmailCertificationService;
 import project.campshare.dto.AddressBookDto;
@@ -115,13 +115,20 @@ public class UserService {
         userRepository.deleteByEmail(email);
     }
 
-    @Transactional
     public void validToken(String token,String email){
         emailCertificationService.verifyEmail(token,email);
-        User user = userRepository.findByEmail(email).orElseThrow(() -> new UserNotFoundException("존재하지 않는 사용자 입니다."));
+    }
+
+
+    @Transactional
+    public void updateEmailToken(String token, String email) {
+        validToken(token,email);
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new UnauthenticatedUserException("존재하지 않는 사용자입니다."));
         user.updateEmailVerified();
     }
 
+    @Transactional
     public void updateAccount(String email, Account account){
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() ->new UserNotFoundException("존재하지 않는 사용자입니다."));
@@ -135,6 +142,7 @@ public class UserService {
 
         return user.getAccount();
     }
+
     public List<AddressBook> getAddressBook(String email) {
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new UserNotFoundException("존재하지 않는 사용자입니다."));

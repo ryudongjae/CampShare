@@ -7,7 +7,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import project.campshare.domain.model.usermodel.user.User;
+import project.campshare.domain.model.user.User;
 import project.campshare.dto.UserDto.LoginRequest;
 import project.campshare.dto.UserDto.SaveRequest;
 import project.campshare.dto.UserDto.UserInfoDto;

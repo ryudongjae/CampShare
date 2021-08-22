@@ -4,8 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
-import project.campshare.domain.model.usermodel.user.User;
-import project.campshare.domain.repository.UserRepository;
+import project.campshare.annotation.LoginCheck.EmailAuthStatus;
 import project.campshare.logincommand.userlogin.SessionLoginService;
 import project.campshare.annotation.LoginCheck;
 import project.campshare.exception.user.UnauthenticatedUserException;
@@ -19,7 +18,7 @@ import javax.servlet.http.HttpServletResponse;
 public class LoginCheckInterceptor implements HandlerInterceptor {
 
     private final SessionLoginService loginService;
-    private final UserRepository userRepository;
+
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response,
@@ -39,11 +38,9 @@ public class LoginCheckInterceptor implements HandlerInterceptor {
             }
 
 
-            LoginCheck.EmailAuthStatus authStatus = loginCheck.authority();
-            if(authStatus == LoginCheck.EmailAuthStatus.AUTH){
-                String email = loginService.getLoginUser();
-                User user = userRepository.findByEmail(email).orElseThrow();
-                if(!user.getEmailVerified()){
+            EmailAuthStatus authStatus = loginCheck.authority();
+            if(authStatus == EmailAuthStatus.AUTH){
+                if(!loginService.isEmailAuth()){
                     throw new UnauthenticatedUserException("이메일 인증 후 이용 가능합니다.");
                 }
             }

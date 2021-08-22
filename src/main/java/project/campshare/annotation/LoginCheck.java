@@ -17,8 +17,8 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 public @interface LoginCheck {
 
     enum EmailAuthStatus{
-        FREE,AUTH
+        UN_AUTH,AUTH
     }
 
-    EmailAuthStatus authority() default EmailAuthStatus.FREE;
+    EmailAuthStatus authority() default EmailAuthStatus.UN_AUTH;
 }
