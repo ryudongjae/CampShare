@@ -7,7 +7,7 @@ import org.springframework.web.bind.support.WebDataBinderFactory;
 import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.ModelAndViewContainer;
-import project.campshare.logincommand.userlogin.SessionLoginService;
+import project.campshare.domain.service.loginservice.userlogin.SessionLoginService;
 import project.campshare.annotation.CurrentUser;
 
 @Component

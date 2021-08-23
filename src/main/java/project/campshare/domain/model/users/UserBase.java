@@ -1,8 +1,9 @@
-package project.campshare.domain.model.user;
+package project.campshare.domain.model.users;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import project.campshare.domain.model.users.user.BaseTimeEntity;
 
 import javax.persistence.*;
 
@@ -11,7 +12,7 @@ import javax.persistence.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Inheritance(strategy = InheritanceType.JOINED)
-public class UserBase extends BaseTimeEntity{
+public class UserBase extends BaseTimeEntity {
 
     @Id@GeneratedValue
     @Column(name = "USER_ID")

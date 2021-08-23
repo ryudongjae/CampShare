@@ -4,11 +4,12 @@ package project.campshare.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
-import project.campshare.logincommand.userlogin.SessionLoginService;
-import project.campshare.domain.model.user.Account;
-import project.campshare.domain.model.user.address.Address;
-import project.campshare.domain.model.user.address.AddressBook;
+import project.campshare.domain.service.loginservice.userlogin.SessionLoginService;
+import project.campshare.domain.model.users.user.Account;
+import project.campshare.domain.model.users.user.address.Address;
+import project.campshare.domain.model.users.user.address.AddressBook;
 import project.campshare.annotation.CurrentUser;
 import project.campshare.annotation.LoginCheck;
 import project.campshare.domain.service.UserService;
@@ -31,7 +32,7 @@ import static project.campshare.util.ResponseConstants.*;
 
 @RequiredArgsConstructor
 @RequestMapping("/users")
-@RestController
+@Controller
 public class UserApiController {
 
     private final SessionLoginService sessionLoginService;

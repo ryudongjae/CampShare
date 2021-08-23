@@ -1,4 +1,4 @@
-package project.campshare.domain.model.user.address;
+package project.campshare.domain.model.users.user.address;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 

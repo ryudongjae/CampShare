@@ -1,35 +1,75 @@
 package project.campshare.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.data.jpa.mapping.JpaMetamodelMappingContext;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
+import org.springframework.restdocs.RestDocumentationContextProvider;
+import org.springframework.restdocs.RestDocumentationExtension;
+import org.springframework.restdocs.payload.JsonFieldType;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
-import project.campshare.domain.model.user.User;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.web.context.WebApplicationContext;
+import project.campshare.domain.model.users.user.User;
 import project.campshare.domain.repository.UserRepository;
+import project.campshare.domain.service.UserService;
+import project.campshare.domain.service.email.EmailCertificationService;
+import project.campshare.domain.service.loginservice.userlogin.SessionLoginService;
+import project.campshare.domain.service.sms.SmsCertificationService;
+import project.campshare.dto.UserDto;
 
+import static org.mockito.Mockito.doNothing;
+import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
+import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.documentationConfiguration;
+import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
+import static org.springframework.restdocs.payload.PayloadDocumentation.requestFields;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.test.web.servlet.setup.SharedHttpSessionConfigurer.sharedHttpSession;
 
-
-@SpringBootTest
-@AutoConfigureMockMvc
+@ExtendWith(RestDocumentationExtension.class)
+@WebMvcTest(UserApiController.class)
+@ActiveProfiles("test")
+@MockBean(JpaMetamodelMappingContext.class)
 class UserApiControllerTest {
-    @Autowired
+
     MockMvc mockMvc;
-    //실제 객체와 비슷하지만 테스트에 필요한 기능만 가지는 가짜 객체를 만들어서 애플리케이션
-    // 서버에 배포하지 않고도 스프링 MVC 동작을 재현할 수 있는 클래스를 의미합니다.
+
+    @MockBean
+    UserService userService;
+
+    @MockBean
+    SessionLoginService sessionLoginService;
 
     @Autowired
     ObjectMapper objectMapper;
 
-    @Autowired
+    @MockBean
+    SmsCertificationService smsCertificationService;
+
+    @MockBean
+    EmailCertificationService emailCertificationService;
+
+    @MockBean
      UserRepository userRepository;
+
+    @BeforeEach
+    public void setup(WebApplicationContext webApplicationContext,
+                      RestDocumentationContextProvider restDocumentation) {
+        this.mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext)
+                .apply(documentationConfiguration(restDocumentation))
+                .apply(sharedHttpSession())
+                .build();
+    }
 
     @Test
     @DisplayName("회원가입 성공")
@@ -47,6 +87,35 @@ class UserApiControllerTest {
                 .andDo(print())
                 .andExpect(status().isCreated())
                 .andExpect(header().string(HttpHeaders.LOCATION, "http://localhost/users/1"));
+    }
+
+
+    @Test
+    @DisplayName("회원가입 - 모든 유효성 검사에 통과했다면 회원가입에 성공한다.")
+    void createUser_successful() throws Exception {
+        UserDto.SaveRequest saveRequest = UserDto.SaveRequest.builder()
+                .email("rdj10149@gmail")
+                .password("111111112")
+                .nickname("ryu")
+                .phone("01012225448")
+                .build();
+
+        doNothing().when(userService).saveUser(saveRequest);
+
+        mockMvc.perform(post("/users")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(saveRequest)))
+                .andDo(print())
+                .andExpect(status().isCreated())
+                .andDo(document("users/create/successful", requestFields(
+                        fieldWithPath("email").type(JsonFieldType.STRING)
+                                .description("The user's email address"),
+                        fieldWithPath("password").type(JsonFieldType.STRING)
+                                .description("The user's password"),
+                        fieldWithPath("nickname").type(JsonFieldType.STRING)
+                                .description("The user's nickname"),
+                        fieldWithPath("phone").type(JsonFieldType.STRING).description("The user's phone")
+                )));
     }
     
     

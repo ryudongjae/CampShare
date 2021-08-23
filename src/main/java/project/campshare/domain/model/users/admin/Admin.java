@@ -1,9 +1,9 @@
-package project.campshare.domain.model.admin;
+package project.campshare.domain.model.users.admin;
 
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
-import project.campshare.domain.model.user.UserBase;
-import project.campshare.domain.model.user.UserLevel;
+import project.campshare.domain.model.users.UserBase;
+import project.campshare.domain.model.users.UserLevel;
 
 import javax.persistence.Entity;
 

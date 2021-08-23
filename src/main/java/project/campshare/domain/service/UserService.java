@@ -4,11 +4,11 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import project.campshare.domain.model.user.Account;
-import project.campshare.domain.model.user.User;
-import project.campshare.domain.model.user.address.Address;
-import project.campshare.domain.model.user.address.AddressBook;
-import project.campshare.domain.model.user.address.AddressBookRepository;
+import project.campshare.domain.model.users.user.Account;
+import project.campshare.domain.model.users.user.User;
+import project.campshare.domain.model.users.user.address.Address;
+import project.campshare.domain.model.users.user.address.AddressBook;
+import project.campshare.domain.model.users.user.address.AddressBookRepository;
 import project.campshare.domain.repository.UserRepository;
 import project.campshare.domain.service.email.EmailCertificationService;
 import project.campshare.dto.AddressBookDto;
@@ -41,7 +41,7 @@ public class UserService {
     }
 
     //이메일 중복과 닉네임 중복 exception 분리하여 예외의 원인을 정확히 파악하도록 구현
-    public User saveUser(SaveRequest userDto){
+    public void saveUser(SaveRequest userDto){
         if(emailDuplicateCheck(userDto.getEmail())){
             throw new DuplicateEmailException("이미 존재하는 이메일 입니다.");
         }
@@ -50,7 +50,9 @@ public class UserService {
             throw new DuplicateNicknameException();
         }
         userDto.passwordEncryption(encryptionService);
-        return userRepository.save(userDto.toEntity());
+
+        User user = userRepository.save(userDto.toEntity());
+
     }
 
     /**

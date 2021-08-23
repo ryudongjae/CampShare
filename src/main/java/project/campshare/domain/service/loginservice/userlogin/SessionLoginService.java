@@ -1,8 +1,9 @@
-package project.campshare.logincommand.userlogin;
+package project.campshare.domain.service.loginservice.userlogin;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import project.campshare.domain.model.user.User;
+import project.campshare.domain.model.users.user.User;
 import project.campshare.dto.UserDto;
 import project.campshare.domain.repository.UserRepository;
 import project.campshare.encrypt.EncryptionService;
@@ -18,9 +19,13 @@ import static project.campshare.util.UserConstants.USER_ID;
 @Service
 @RequiredArgsConstructor
 public class SessionLoginService {
-        private final HttpSession session;
-        private final UserRepository userRepository;
-        private final EncryptionService encryptionService;
+
+
+    private final HttpSession session;
+
+    private final UserRepository userRepository;
+
+    private final EncryptionService encryptionService;
 
     /**
      * 아이디 비밀번호 일치 여부

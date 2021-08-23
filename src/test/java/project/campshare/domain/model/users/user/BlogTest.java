@@ -1,4 +1,4 @@
-package project.campshare.domain.model.usermodel;
+package project.campshare.domain.model.users.user;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

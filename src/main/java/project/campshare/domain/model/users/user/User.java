@@ -1,8 +1,10 @@
-package project.campshare.domain.model.user;
+package project.campshare.domain.model.users.user;
 
 import lombok.*;
-import project.campshare.domain.model.user.address.Address;
-import project.campshare.domain.model.user.address.AddressBook;
+import project.campshare.domain.model.users.UserBase;
+import project.campshare.domain.model.users.UserLevel;
+import project.campshare.domain.model.users.user.address.Address;
+import project.campshare.domain.model.users.user.address.AddressBook;
 import project.campshare.exception.user.UnableToChangeNicknameException;
 
 import javax.persistence.*;
@@ -17,7 +19,7 @@ import static project.campshare.dto.UserDto.*;
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
-public class User extends UserBase{
+public class User extends UserBase {
 
 
     @Column(name = "USER_NICKNAME")

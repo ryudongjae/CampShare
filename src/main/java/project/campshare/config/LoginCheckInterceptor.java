@@ -5,7 +5,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
 import project.campshare.annotation.LoginCheck.EmailAuthStatus;
-import project.campshare.logincommand.userlogin.SessionLoginService;
+import project.campshare.domain.service.loginservice.userlogin.SessionLoginService;
 import project.campshare.annotation.LoginCheck;
 import project.campshare.exception.user.UnauthenticatedUserException;
 
@@ -13,8 +13,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 
-@RequiredArgsConstructor
+
 @Component
+@RequiredArgsConstructor
 public class LoginCheckInterceptor implements HandlerInterceptor {
 
     private final SessionLoginService loginService;
