@@ -31,7 +31,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 import static org.mockito.internal.verification.VerificationModeFactory.atLeastOnce;
-import static project.campshare.dto.UserDto.ChangePasswordRequest.of;
+
 
 @ExtendWith(MockitoExtension.class)
 class UserServiceTest {
@@ -104,7 +104,10 @@ class UserServiceTest {
     @DisplayName("비밀번호 찾기 성공, 전달받은 객체가 회원이라면 비밀번호 변경에 성공한다.")
     void findPassword()throws Exception{
         //given
-        ChangePasswordRequest changePasswordRequest = of("rdj10149@gmail.com","ryu11",null);
+        ChangePasswordRequest changePasswordRequest = ChangePasswordRequest.builder()
+                .email("rdj10149@gmail.com")
+                .passwordAfter("ryu11")
+                .build();
         User user = createUserDto().toEntity();
 
         //when
@@ -199,7 +202,11 @@ class UserServiceTest {
         User user = createUserDto().toEntity();
 
         ChangePasswordRequest changePasswordRequest
-                = ChangePasswordRequest.of(null,"ryu1014","ryu11");
+                = ChangePasswordRequest.builder()
+                .email(null)
+                .passwordBefore("ryu1014")
+                .passwordAfter("ryu11")
+                .build();
 
         String email = "rdj10149@gmail.com";
 
@@ -227,7 +234,11 @@ class UserServiceTest {
     @DisplayName("비밀번호 변경 - 이전 비밀번호가 일치하지 않으면 비밀번호 변경에 실패한다.")
     void failUpdatePassword()throws Exception{
         //given
-        ChangePasswordRequest changePasswordRequest = ChangePasswordRequest.of(null,"ryu1014","ryu11");
+        ChangePasswordRequest changePasswordRequest = ChangePasswordRequest.builder()
+                .email(null)
+                .passwordBefore("ryu1014")
+                .passwordAfter("ryu11")
+                .build();
         String email = "rdj10149@gmail.com";
         String passwordBefore = encryptionService.encrypt(changePasswordRequest.getPasswordBefore());
 
@@ -269,7 +280,7 @@ class UserServiceTest {
                 .password("ryu11")
                 .nickname("ryu")
                 .phone("01011110000")
-                //.addressBook(addressBooks)
+                .addressBooks(addressBooks)
                 .build();
         String email = "rdj1014@gmail.com";
         Address address1 = new Address("house1","street1","1","1001");
@@ -327,7 +338,7 @@ class UserServiceTest {
                 .password("ryu11")
                 .nickname("ryu")
                 .phone("01000001111")
-                //.addressBook(addressBooks)
+                .addressBooks(addressBooks)
                 .build();
 
         String email = "rdj10149@gmail.com";

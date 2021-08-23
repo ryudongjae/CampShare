@@ -41,6 +41,7 @@ public class UserService {
     }
 
     //이메일 중복과 닉네임 중복 exception 분리하여 예외의 원인을 정확히 파악하도록 구현
+    @Transactional
     public void saveUser(SaveRequest userDto){
         if(emailDuplicateCheck(userDto.getEmail())){
             throw new DuplicateEmailException("이미 존재하는 이메일 입니다.");

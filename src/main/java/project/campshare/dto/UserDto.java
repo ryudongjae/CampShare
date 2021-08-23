@@ -9,6 +9,7 @@ import project.campshare.domain.model.users.user.Account;
 import project.campshare.domain.model.users.user.User;
 import project.campshare.domain.model.users.UserLevel;
 import project.campshare.domain.model.users.user.address.Address;
+import project.campshare.domain.model.users.user.address.AddressBook;
 import project.campshare.encrypt.EncryptionService;
 
 import javax.validation.constraints.Email;
@@ -16,6 +17,7 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Getter
 @Builder
@@ -68,6 +70,11 @@ public class UserDto {
     public static class SmsCertificationRequest {
         private String phone;
         private String certificationNumber;
+
+        public SmsCertificationRequest(String phone, String certificationNumber) {
+            this.phone = phone;
+            this.certificationNumber = certificationNumber;
+        }
     }
 
     @Getter
@@ -75,18 +82,26 @@ public class UserDto {
     public static class EmailCertificationRequest{
         private String email;
         private String certificationNumber;
+
+        @Builder
+        public EmailCertificationRequest(String email, String certificationNumber) {
+            this.email = email;
+            this.certificationNumber = certificationNumber;
+        }
     }
 
 
     @Getter
-    @AllArgsConstructor
+    @NoArgsConstructor
     public static class LoginRequest {
 
         private String email;
         private String password;
 
-        public static LoginRequest of(String email, String password) {
-            return new LoginRequest(email, password);
+        @Builder
+        public LoginRequest(String email, String password) {
+            this.email = email;
+            this.password = password;
         }
 
         public void passwordEncryption(EncryptionService encryptionService) {
@@ -94,31 +109,42 @@ public class UserDto {
         }
     }
     @Getter
-    @AllArgsConstructor
+    @NoArgsConstructor
     @Builder
     public static class UserInfoDto {
 
         private String email;
         private String nickname;
         private String phone;
-        private Address address;
+        private List<AddressBook> addressBooks;
         private Account account;
         private boolean emailVerified;
 
-        public static UserInfoDto of(String email, String nickname, String phone, Address address, Account account,boolean emailVerified){
-            return new UserInfoDto(email,nickname,phone,address,account,emailVerified);
+        @Builder
+        public UserInfoDto(String email, String nickname, String phone, List<AddressBook> addressBooks, Account account, boolean emailVerified) {
+            this.email = email;
+            this.nickname = nickname;
+            this.phone = phone;
+            this.addressBooks = addressBooks;
+            this.account = account;
+            this.emailVerified = emailVerified;
         }
     }
 
     @Getter
-    @Builder
     public static class FindUserResponse{
         private String email;
         private String phone;
+
+        @Builder
+        public FindUserResponse(String email, String phone) {
+            this.email = email;
+            this.phone = phone;
+        }
     }
 
     @Getter
-    @AllArgsConstructor
+    @NoArgsConstructor
     public static class ChangePasswordRequest{
         private String email;
 
@@ -131,9 +157,13 @@ public class UserDto {
             this.passwordAfter = encryptionService.encrypt(passwordAfter);
             this.passwordBefore = encryptionService.encrypt(passwordBefore);
         }
-
-        public static ChangePasswordRequest of(String email,String passwordAfter,String passwordBefore){
-            return new ChangePasswordRequest(email,passwordAfter,passwordBefore);
+        @Builder
+        public ChangePasswordRequest(String email,
+                                     @NotBlank(message = "비밀번호를 입력하세요.") @Size(min = 8, max = 20, message = "비밀번호는 8자 이상 20자 이하로 입력하세요. ") String passwordAfter,
+                                     String passwordBefore) {
+            this.email = email;
+            this.passwordAfter = passwordAfter;
+            this.passwordBefore = passwordBefore;
         }
     }
 
@@ -141,6 +171,11 @@ public class UserDto {
     @NoArgsConstructor
     public static class PasswordRequest{
         private String password;
+
+        @Builder
+        public PasswordRequest(String password) {
+            this.password = password;
+        }
     }
 
 

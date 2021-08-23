@@ -1,6 +1,7 @@
 package project.campshare.config;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
@@ -9,6 +10,7 @@ import project.campshare.domain.service.loginservice.userlogin.SessionLoginServi
 import project.campshare.annotation.LoginCheck;
 import project.campshare.exception.user.UnauthenticatedUserException;
 
+import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -20,11 +22,20 @@ public class LoginCheckInterceptor implements HandlerInterceptor {
 
     private final SessionLoginService loginService;
 
+    @Inject
+    private Environment environment;
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response,
                              Object handler)
             throws Exception {
+
+        String [] activeProfiles =environment.getActiveProfiles();
+        for (String profile : activeProfiles) {
+            if(profile.equals("test")){
+                return true;
+            }
+        }
         if (handler instanceof HandlerMethod) {
             HandlerMethod handlerMethod = (HandlerMethod) handler;
             LoginCheck loginCheck = handlerMethod.getMethodAnnotation(LoginCheck.class);
