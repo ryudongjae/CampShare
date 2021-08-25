@@ -43,6 +43,7 @@ public class UserApiController {
 
     private final EmailCertificationService emailCertificationService;
 
+
     /**
      * 이메일 검증
      * @param email

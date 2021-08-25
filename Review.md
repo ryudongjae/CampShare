@@ -62,3 +62,10 @@
 1.Admin Entity분리 
 2.
 
+
+####8/24 ->
+1. userLevel (UNAUTH, AUTH, BAN, ADMIN) 추가
+2. userLevel 별 로그인 인터셉터 수정
+3. User 클래스에 인증 여부를 확인하는 필드 삭제 -> userLevel로 대체  
+4. 상품 캐시적용 
+

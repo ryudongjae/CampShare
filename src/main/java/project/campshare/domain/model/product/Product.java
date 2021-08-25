@@ -4,6 +4,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import project.campshare.domain.model.users.user.BaseTimeEntity;
+import project.campshare.domain.model.users.user.User;
 import project.campshare.dto.ProductDto.ProductInfoResponse;
 import project.campshare.dto.ProductDto.SaveRequest;
 
@@ -20,6 +21,9 @@ public class Product extends BaseTimeEntity {
     private String name;
 
     private String salePrice;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    private User user;
 
     private String productDescription;
 

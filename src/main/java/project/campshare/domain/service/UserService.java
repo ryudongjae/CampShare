@@ -128,7 +128,7 @@ public class UserService {
         validToken(token,email);
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new UnauthenticatedUserException("존재하지 않는 사용자입니다."));
-        user.updateEmailVerified();
+        user.updateUserLevel();
     }
 
     @Transactional

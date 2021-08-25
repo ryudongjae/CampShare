@@ -60,7 +60,7 @@ public class UserDto {
                     .nicknameModifiedDate(LocalDateTime.now())
                     .nickname(this.nickname)
                     .phone(this.phone)
-                    .userLevel(UserLevel.USER)
+                    .userLevel(UserLevel.UNAUTH)
                     .build();
         }
     }
@@ -118,16 +118,16 @@ public class UserDto {
         private String phone;
         private List<AddressBook> addressBooks;
         private Account account;
-        private boolean emailVerified;
+        private UserLevel userLevel;
 
         @Builder
-        public UserInfoDto(String email, String nickname, String phone, List<AddressBook> addressBooks, Account account, boolean emailVerified) {
+        public UserInfoDto(String email, String nickname, String phone, List<AddressBook> addressBooks, Account account, UserLevel userLevel) {
             this.email = email;
             this.nickname = nickname;
             this.phone = phone;
             this.addressBooks = addressBooks;
             this.account = account;
-            this.emailVerified = emailVerified;
+            this.userLevel = userLevel;
         }
     }
 

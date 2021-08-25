@@ -39,7 +39,7 @@ public class User extends UserBase {
     @Column(name = "USER_ACCOUNT")
     private Account account;
 
-    private boolean emailVerified;
+
 
     public UserInfoDto toUserInfoDto() {
         return UserInfoDto.builder()
@@ -47,7 +47,7 @@ public class User extends UserBase {
                 .nickname(this.getNickname())
                 .phone(this.getPhone())
                 .account(this.getAccount())
-                .emailVerified(this.emailVerified)
+                .userLevel(this.userLevel)
                 .build();
     }
 
@@ -85,13 +85,9 @@ public class User extends UserBase {
         return !(this.nicknameModifiedDate.isBefore(LocalDateTime.now().minusDays(7)));
     }
 
-    public void updateEmailVerified(){
-        this.emailVerified =true;
-    }
-
-    public boolean getEmailVerified() {
-        return this.emailVerified;
-    }
+   public void updateUserLevel(){
+        this.userLevel = UserLevel.AUTH;
+   }
 
     @Builder
     public User(String email, String password, UserLevel userLevel,

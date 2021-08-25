@@ -92,4 +92,11 @@ public class GlobalExceptionHandler {
 
     }
 
+    @ExceptionHandler(NotAuthorizedException.class)
+    public final ResponseEntity handleNotAuthorized(NotAuthorizedException ex,WebRequest webRequest){
+        log.debug("Not Authorized :: {}, detection time ={}", webRequest.getDescription(false),
+                LocalDateTime.now(), ex);
+        return NOT_AUTHORIZED;
+    }
+
 }
