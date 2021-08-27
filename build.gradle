@@ -38,6 +38,10 @@ dependencies {
 	testImplementation 'org.springframework.restdocs:spring-restdocs-mockmvc'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 
+	implementation group: 'org.msgpack', name: 'jackson-dataformat-msgpack', version: '0.8.22'
+	implementation group: 'com.fasterxml.jackson.datatype', name: 'jackson-datatype-jsr310'
+
+
 	/* Redis 사용을 위한 의존성 추가 */
 	implementation 'org.springframework.boot:spring-boot-starter-data-redis'
 	implementation 'org.springframework.boot:spring-boot-starter-json'

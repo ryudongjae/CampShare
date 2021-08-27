@@ -1,5 +1,9 @@
 package project.campshare.config;
 
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.EnableCaching;
@@ -11,6 +15,11 @@ import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.serializer.GenericJackson2JsonRedisSerializer;
 import org.springframework.data.redis.serializer.RedisSerializationContext;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
+
+import java.time.Duration;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Map.Entry;
 
 /**
  * @EnableCaching :@Cacheable, @CacheEvict 등의 캐시 어노테이션 활성화를 위한 어노테이션이다. AOP 를 이용한 캐싱 기능을 추상화 시켜주므로
@@ -30,6 +39,23 @@ public class CacheConfig {
     @Autowired
     RedisConnectionFactory redisConnectionFactory;
 
+    @Autowired
+    CacheProperties cacheProperties;
+
+
+    /*
+     * Jackson2는 Java8의 LocalDate의 타입을 알지못해서적절하게 직렬화해주지 않는다.
+     * 때문에 역직렬화 시 에러가 발생한다.
+     * 따라서 적절한 ObjectMapper를 Serializer에 전달하여 직렬화 및 역직렬화를 정상화 시켰다.
+     */
+    private ObjectMapper objectMapper(){
+        ObjectMapper mapper = new ObjectMapper();
+        mapper.disable(SerializationFeature.WRITE_DURATIONS_AS_TIMESTAMPS);
+        mapper.registerModule(new JavaTimeModule());
+        mapper.enableDefaultTyping(ObjectMapper.DefaultTyping.NON_FINAL, JsonTypeInfo.As.PROPERTY);
+        return mapper;
+    }
+
     /*
      * 기본적으로 스프링에서 지원하는 캐시 기능의 캐시 저장소는 JDK 의 ConcurrentHashMap 이며,
      * 그 외 캐시 저장소를 사용하기 위해서는 CacheManager Bean 으로 등록하여 사용할 수 있다.
@@ -42,20 +68,36 @@ public class CacheConfig {
      * 서비스 확장으로 WAS 인스턴스가 늘어나고 Cache 데이터가 커질 수록 효과적이다.
      */
 
-    @Bean
-    public CacheManager redisCacheManager(){
+
+    private RedisCacheConfiguration redisCacheDefaultConfiguration(){
         RedisCacheConfiguration redisCacheConfiguration = RedisCacheConfiguration
                 .defaultCacheConfig()
                 .serializeKeysWith(RedisSerializationContext.SerializationPair
                 .fromSerializer(new StringRedisSerializer()))
                 .serializeValuesWith(RedisSerializationContext.SerializationPair
-                .fromSerializer(new GenericJackson2JsonRedisSerializer()));
+                .fromSerializer(new GenericJackson2JsonRedisSerializer(objectMapper())));
 
-        RedisCacheManager redisCacheManager = RedisCacheManager.RedisCacheManagerBuilder
-                .fromConnectionFactory(redisConnectionFactory)
-                .cacheDefaults(redisCacheConfiguration).build();
-
-        return redisCacheManager;
+        return redisCacheConfiguration;
+    }
+    /*
+     * properties에서 가져온 캐시명과 ttl 값으로 RedisCacheConfiguration을 만들고 Map에 넣어 반환한다.
+     */
+    private Map<String, RedisCacheConfiguration> redisCacheConfigurationMap() {
+        Map<String, RedisCacheConfiguration> cacheConfigurations = new HashMap<>();
+        for (Entry<String, Long> cacheNameAndTimeout : cacheProperties.getTtl().entrySet()) {
+            cacheConfigurations
+                    .put(cacheNameAndTimeout.getKey(), redisCacheDefaultConfiguration().entryTtl(
+                            Duration.ofSeconds(cacheNameAndTimeout.getValue())));
+        }
+        return cacheConfigurations;
     }
 
+    @Bean
+    public CacheManager redisCacheManager() {
+        RedisCacheManager redisCacheManager = RedisCacheManager.RedisCacheManagerBuilder
+                .fromConnectionFactory(redisConnectionFactory)
+                .cacheDefaults(redisCacheDefaultConfiguration())
+                .withInitialCacheConfigurations(redisCacheConfigurationMap()).build();
+        return redisCacheManager;
+    }
 }

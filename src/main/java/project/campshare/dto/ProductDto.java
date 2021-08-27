@@ -65,8 +65,8 @@ public class ProductDto {
         private String name;
         private String salePrice;
         private String productDescription;
-        @JsonDeserialize(using = LocalDateDeserializer.class)
-        @JsonSerialize(using = LocalDateSerializer.class)
+        //@JsonDeserialize(using = LocalDateDeserializer.class)
+        //@JsonSerialize(using = LocalDateSerializer.class)
         private String releasePrice;
         private TransactionStatus transactionStatus;
         private ProductState productState;
