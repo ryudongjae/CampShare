@@ -1,14 +1,21 @@
+buildscript {
+	dependencies {
+		classpath("gradle.plugin.com.ewerk.gradle.plugins:querydsl-plugin:1.0.10")
+	}
+}
+
 plugins {
 	id 'org.springframework.boot' version '2.4.1'
 	id 'io.spring.dependency-management' version '1.0.11.RELEASE'
 	id 'org.asciidoctor.convert' version '1.5.9.2'
-	id "com.ewerk.gradle.plugins.querydsl" version "1.0.10"
 	id 'java'
 }
 
 group = 'project'
 version = '0.0.1-SNAPSHOT'
 sourceCompatibility = '11'
+
+apply plugin: "com.ewerk.gradle.plugins.querydsl"
 
 configurations {
 	compileOnly {
@@ -39,9 +46,13 @@ dependencies {
 	asciidoctor 'org.springframework.restdocs:spring-restdocs-asciidoctor'
 	testImplementation 'org.springframework.restdocs:spring-restdocs-mockmvc'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
-
 	implementation group: 'org.msgpack', name: 'jackson-dataformat-msgpack', version: '0.8.22'
 	implementation group: 'com.fasterxml.jackson.datatype', name: 'jackson-datatype-jsr310'
+
+	//querydsl 추가
+	implementation 'com.querydsl:querydsl-jpa'
+	//querydsl 추가
+	implementation 'com.querydsl:querydsl-apt'
 
 
 	/* Redis 사용을 위한 의존성 추가 */
@@ -66,24 +77,17 @@ asciidoctor {
 	inputs.dir snippetsDir
 	dependsOn Test
 }
-
-def querydslDir = "buildDir/generated/querydsl"
-
+def querydslDir = "$buildDir/generated/querydsl"
 querydsl {
 	jpa = true
-	querydslSourcesDir = querydslDir;
+	querydslSourcesDir = querydslDir
 }
-
 sourceSets {
 	main.java.srcDir querydslDir
 }
-
 configurations {
-	querydsl.extendsFrom complieClasspath
+	querydsl.extendsFrom compileClasspath
 }
-
-compileQuerydsl{
+compileQuerydsl {
 	options.annotationProcessorPath = configurations.querydsl
 }
-
-
