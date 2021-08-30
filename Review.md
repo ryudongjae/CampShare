@@ -73,3 +73,13 @@
 ####8/27->
 1.HTML 수정  
 2.캐시 만료기간 설정
+
+
+#### 8/29->  
+1. ID(PK) , Email, UserLevel별 검색 기능
+2.LocalDate 직렬화를 위한 ObjectMapper 등록
+   
+
+#### 8/30 ->  
+1.AWS S3 설정 및 제품 이미지
+2.S3 서비스 구현 

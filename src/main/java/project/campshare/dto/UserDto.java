@@ -1,9 +1,6 @@
 package project.campshare.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.validator.constraints.Length;
 import project.campshare.domain.model.users.user.Account;
 import project.campshare.domain.model.users.user.User;
@@ -178,6 +175,37 @@ public class UserDto {
         }
     }
 
+
+    @Getter
+    @NoArgsConstructor
+    public static class UserListResponse{
+        private Long id;
+        private String email;
+        private UserLevel userLevel;
+
+        @Builder
+        public UserListResponse(Long id, String email, UserLevel userLevel) {
+            this.id = id;
+            this.email = email;
+            this.userLevel = userLevel;
+        }
+    }
+
+    @Getter
+    @Setter
+    @NoArgsConstructor
+    public static class UserSearchCondition{
+        private Long id;
+        private String email;
+        private UserLevel userLevel;
+
+        @Builder
+        public UserSearchCondition(Long id, String email, UserLevel userLevel) {
+            this.id = id;
+            this.email = email;
+            this.userLevel = userLevel;
+        }
+    }
 
 
 

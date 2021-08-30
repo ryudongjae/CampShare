@@ -48,6 +48,7 @@ dependencies {
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	implementation group: 'org.msgpack', name: 'jackson-dataformat-msgpack', version: '0.8.22'
 	implementation group: 'com.fasterxml.jackson.datatype', name: 'jackson-datatype-jsr310'
+	annotationProcessor "org.springframework.boot:spring-boot-configuration-processor"
 
 	//querydsl 추가
 	implementation 'com.querydsl:querydsl-jpa'
@@ -59,6 +60,11 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-data-redis'
 	implementation 'org.springframework.boot:spring-boot-starter-json'
 	implementation group: 'org.msgpack', name: 'jackson-dataformat-msgpack', version: '0.8.18'
+
+	implementation group: 'com.amazonaws', name: 'aws-java-sdk-s3', version: '1.11.964'
+	runtimeOnly group: 'org.springframework.cloud', name: 'spring-cloud-dependencies', version: 'Hoxton.SR10', ext: 'pom'
+
+	implementation group: 'org.apache.tika', name: 'tika-parsers', version: '1.25'
 
 	//이메일 발송
 	implementation 'org.springframework.boot:spring-boot-starter-mail'

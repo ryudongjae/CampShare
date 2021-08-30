@@ -5,16 +5,12 @@ import lombok.Setter;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 
+import java.util.HashMap;
 import java.util.Map;
 
-@Getter@Setter@Component@ConfigurationProperties(prefix = "redis-cache-constants")
+@Getter
+@Component@ConfigurationProperties(prefix = "cache.redis")
 public class CacheProperties {
 
-    private Map<String,Long>ttl;
-
-    @Getter@Setter
-    public static class CacheNameTimeout{
-        private String name;
-        private String timeout;
-    }
+   private final Map<String,Long>ttl = new HashMap<>();
 }

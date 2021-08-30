@@ -35,12 +35,14 @@ public class Product extends BaseTimeEntity {
     @Enumerated(EnumType.STRING)
     private ProductState productState;
 
+    private String imagePath;
+
     @Enumerated(EnumType.STRING)
     private TransactionMethod transactionMethod;
 
     @Builder
     public Product(Long id, String name, String salePrice, String productDescription, String releasePrice,
-                   TransactionStatus transactionStatus, ProductState productState, TransactionMethod transactionMethod) {
+                   TransactionStatus transactionStatus, ProductState productState, TransactionMethod transactionMethod,String imagePath) {
         this.id = id;
         this.name = name;
         this.salePrice = salePrice;
@@ -49,6 +51,7 @@ public class Product extends BaseTimeEntity {
         this.transactionStatus = transactionStatus;
         this.productState = productState;
         this.transactionMethod = transactionMethod;
+        this.imagePath = imagePath;
     }
 
     public ProductInfoResponse toProductInfoResponse(){
@@ -60,6 +63,7 @@ public class Product extends BaseTimeEntity {
                 .releasePrice(this.releasePrice)
                 .transactionStatus(this.transactionStatus)
                 .productState(this.productState)
+                .imagePath(this.imagePath)
                 .transactionMethod(this.transactionMethod)
                 .build();
     }
