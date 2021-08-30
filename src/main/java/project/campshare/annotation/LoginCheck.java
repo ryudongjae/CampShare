@@ -1,5 +1,7 @@
 package project.campshare.annotation;
 
+import project.campshare.domain.model.users.UserLevel;
+
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 
@@ -16,9 +18,5 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 @Target(METHOD)
 public @interface LoginCheck {
 
-    enum EmailAuthStatus{
-        UN_AUTH,AUTH
-    }
-
-    EmailAuthStatus authority() default EmailAuthStatus.UN_AUTH;
+    UserLevel authority() default UserLevel.UNAUTH;
 }

@@ -99,7 +99,7 @@ public class GlobalExceptionHandler {
         return NOT_AUTHORIZED;
     }
 
-    public final ResponseEntity<String>illegalMineTypeException(illegalMineTypeException ex){
+    public final ResponseEntity<String>illegalMineTypeException(IllegalMineTypeException ex){
         log.debug("올바르지 않은 확장자 입니다." ,ex );
         return ILLEGAL_MIME_TYPE;
     }
